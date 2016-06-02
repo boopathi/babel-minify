@@ -16,3 +16,7 @@ The plugins included in the preset - https://github.com/boopathi/babel-minify/bl
   "minified": true
 }
 ```
+
+## LICENSE
+
+http://boopathi.mit-license.org
