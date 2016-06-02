@@ -1,6 +1,6 @@
 module.exports = {
   plugins: [
-    // require('babel-plugin-conditional-compile'),
+    require('babel-plugin-conditional-compile').default,
     require('babel-plugin-transform-member-expression-literals'),
     require('babel-plugin-transform-merge-sibling-variables'),
     require('babel-plugin-transform-minify-booleans'),
