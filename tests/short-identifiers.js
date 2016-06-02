@@ -1,6 +1,6 @@
 import {transform} from 'babel-core';
 import test from 'tape';
-import shortIdentifier from '../packages/babel-plugin-short-identifiers';
+import shortIdentifier from '../packages/babel-plugin-transform-shorten-identifiers';
 import {compare} from '../utils';
 
 const babelOpts = {
@@ -10,6 +10,18 @@ const babelOpts = {
 
 const input =
 `
+import MyAwesomeLib from 'my-awesome-lib';
+
+var ReallyLongName = "1";
+
+class BlahBlahBlahBlah {
+  method() {}
+}
+
+function doSomethingWithAReallyLongName() {
+  var localVariable, someIdentifier;
+}
+
 import $ from 'jquery';
 
 var test = "";
@@ -85,6 +97,7 @@ export { l as document };
 
 test('short-identifiers', function(t) {
   const code = transform(input, babelOpts).code;
+  console.log(code);
   t.assert(compare(code, expected));
   t.end();
 });
