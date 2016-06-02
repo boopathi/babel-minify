@@ -1,10 +1,6 @@
-# babel-minify
+# babel-preset-min
 
-Some babel plugins and presets to minify.
-
-## babel-preset-min
-
-#### .babelrc
+### .babelrc
 
 ```json
 {
