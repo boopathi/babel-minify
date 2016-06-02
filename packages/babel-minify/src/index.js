@@ -1,4 +1,4 @@
-import babel from 'babel-core';
+import {transform} from 'babel-core';
 import minPreset from 'babel-preset-min';
 
 const defaultPlugins = minPreset.plugins;
@@ -8,9 +8,19 @@ import conditionalCompile from 'babel-plugin-conditional-compile';
 import removeDebugger from 'babel-plugin-transform-remove-debugger';
 import removeConsole from 'babel-plugin-transform-remove-console';
 
-export default function BabelMinify({
+const DEV = process.env.NODE_ENV !== 'production';
+const PROD = !DEV;
+
+export default function BabelMinify(inputCode, {
   // optimize if-s
   conditionals = true,
+
+  global_defs = {
+    DEV,
+    PROD,
+    __DEV__: DEV,
+    __PROD__: PROD
+  },
 
   drop_debugger = false,
   drop_console = false,
@@ -18,6 +28,8 @@ export default function BabelMinify({
   // passed on to babel transform to tell whether to use babelrc
   babelrc = false,
 } = {}) {
+
+  if (!inputCode) throw new Error('Invalid Input');
 
   const optionalPlugins = [];
 
@@ -34,7 +46,7 @@ export default function BabelMinify({
   drop_debugger && optionalPlugins.push(removeDebugger);
   drop_console && optionalPlugins.push(removeConsole);
 
-  const result = babel.transform(opts.code, {
+  const result = transform(inputCode, {
     babelrc,
     comments: false,
     compact: true,

@@ -1,10 +1,11 @@
 {
   "name": "babel-minify",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Babel minify Node API and CLI",
   "main": "lib/index.js",
   "author": "boopathi",
   "license": "MIT",
+  "bin": "lib/cli.js",
   "dependencies": {
     "babel-core": "^6.9.1",
     "babel-plugin-transform-remove-console": "^6.8.0",
