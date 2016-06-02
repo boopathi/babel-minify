@@ -1,12 +1,12 @@
 {
   "name": "babel-preset-min",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A Preset containing some babel optimizations",
   "main": "lib/index.js",
   "author": "boopathi",
   "license": "MIT",
   "dependencies": {
-    "babel-plugin-transform-shorten-identifiers": "^0.0.1",
+    "babel-plugin-transform-shorten-identifiers": "^0.0.2",
     "babel-plugin-transform-member-expression-literals": "^6.8.0",
     "babel-plugin-transform-merge-sibling-variables": "^6.8.0",
     "babel-plugin-transform-minify-booleans": "^6.8.0",
