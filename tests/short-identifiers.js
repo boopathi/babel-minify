@@ -10,18 +10,6 @@ const babelOpts = {
 
 const input =
 `
-import MyAwesomeLib from 'my-awesome-lib';
-
-var ReallyLongName = "1";
-
-class BlahBlahBlahBlah {
-  method() {}
-}
-
-function doSomethingWithAReallyLongName() {
-  var localVariable, someIdentifier;
-}
-
 import $ from 'jquery';
 
 var test = "";
