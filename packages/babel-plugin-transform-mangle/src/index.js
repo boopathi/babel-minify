@@ -1,4 +1,4 @@
-import nameGenerator from './nameGenerator';
+import nameGenerator from './namegen';
 
 function renameIdentifiers(path) {
   const bindings = path.scope.getAllBindings();
@@ -6,7 +6,11 @@ function renameIdentifiers(path) {
   const names = nameGenerator();
 
   ownBindings.map(b => {
-    path.scope.rename(b, names.next().value);
+    let next = names.next().value;
+    while (path.scope.hasBinding(next)) {
+      next = names.next().value;
+    }
+    path.scope.rename(b, next);
   });
 }
 

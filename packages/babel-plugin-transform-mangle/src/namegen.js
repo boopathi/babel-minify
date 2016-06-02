@@ -1,4 +1,4 @@
-export default function nameGenerator() {
+export default function* nameGenerator() {
   const atoz = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let i = 0;
   while (true) {
