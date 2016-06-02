@@ -13,5 +13,10 @@
     "babel-plugin-transform-shorten-identifiers": "^0.0.3",
     "babel-plugin-transform-simplify-comparison-operators": "^6.8.0",
     "babel-plugin-transform-undefined-to-void": "^6.8.0"
+  },
+  "homepage": "https://github.com/boopathi/babel-minify/tree/master/packages/babel-preset-min",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/boopathi/babel-minify.git"
   }
 }

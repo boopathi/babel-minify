@@ -4,5 +4,10 @@
   "description": "Converts var longname; to var a;",
   "main": "lib/index.js",
   "author": "boopathi",
-  "license": "MIT"
+  "license": "MIT",
+  "homepage": "https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-shorten-identifiers",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/boopathi/babel-minify.git"
+  }
 }
