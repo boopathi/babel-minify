@@ -2,7 +2,7 @@
 
 Some tools, babel plugins and presets to minify ES6+ code or whatever code babel understands.
 
-# WARNING: EXPERIMENTAL
+# :rotating_light: :rotating_light: :rotating_light: WARNING: EXPERIMENTAL :rotating_light: :rotating_light: :rotating_light:
 
 ## Packages overview
 
