@@ -6,7 +6,7 @@
   "author": "boopathi",
   "license": "MIT",
   "dependencies": {
-    "babel-plugin-transform-mangle": "^0.0.7",
+    "babel-plugin-transform-mangle": "^0.0.8",
     "babel-plugin-transform-member-expression-literals": "^6.8.0",
     "babel-plugin-transform-merge-sibling-variables": "^6.8.0",
     "babel-plugin-transform-minify-booleans": "^6.8.0",
