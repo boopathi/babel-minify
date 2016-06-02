@@ -1,0 +1,8 @@
+{
+  "name": "babel-plugin-transform-shorten-identifiers",
+  "version": "0.0.1",
+  "description": "Converts var longname; to var a;",
+  "main": "lib/index.js",
+  "author": "boopathi",
+  "license": "MIT"
+}
