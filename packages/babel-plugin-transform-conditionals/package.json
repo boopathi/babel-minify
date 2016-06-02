@@ -1,0 +1,8 @@
+{
+  "name": "babel-plugin-transform-conditionals",
+  "version": "0.0.0",
+  "description": "Optimize conditional statements",
+  "main": "lib/index.js",
+  "author": "boopathi",
+  "license": "MIT"
+}
