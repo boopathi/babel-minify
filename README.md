@@ -2,6 +2,8 @@
 
 Some tools, babel plugins and presets to minify ES6+ code or whatever code babel understands.
 
+# WARNING: EXPERIMENTAL
+
 ## Packages overview
 
 ### [gulp-babel-minify](https://github.com/boopathi/babel-minify/blob/master/packages/gulp-babel-minify)
