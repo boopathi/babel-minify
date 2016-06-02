@@ -12,7 +12,7 @@ const srcEx = new RegExp("(packages/[^/]+)/src/");
 const libFragment = "$1/lib/";
 
 // for cleaning
-const libs = './packages/**/lib';
+const libs = './packages/*/lib';
 
 gulp.task('default', ['build']);
 
