@@ -14,7 +14,6 @@
     "babel-core": "^6.9.1",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-preset-es2015-node5": "^1.2.0",
-    "babel-register": "^6.9.0",
     "expect": "^1.20.1",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
@@ -22,7 +21,6 @@
     "gulp-watch": "^4.3.6",
     "mocha": "^2.5.3",
     "rimraf": "^2.5.2",
-    "tape": "^4.5.1",
     "through2": "^2.0.1"
   }
 }
