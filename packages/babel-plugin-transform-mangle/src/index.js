@@ -1,20 +1,9 @@
-function* atoz() {
-  yield* 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-}
-
-function* NameGenerator() {
-  let i = 0;
-  while (true) {
-    if (i) for (let j of atoz()) yield j+i;
-    else yield* atoz();
-    i++;
-  }
-}
+import nameGenerator from './nameGenerator';
 
 function renameIdentifiers(path) {
   const bindings = path.scope.getAllBindings();
   const ownBindings = Object.keys(bindings).filter(b => path.scope.hasOwnBinding(b));
-  const names = NameGenerator();
+  const names = nameGenerator();
 
   ownBindings.map(b => {
     path.scope.rename(b, names.next().value);

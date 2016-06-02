@@ -1,11 +1,11 @@
 {
-  "name": "babel-plugin-transform-shorten-identifiers",
+  "name": "babel-plugin-transform-mangle",
   "version": "0.0.3",
   "description": "Converts var longname; to var a;",
   "main": "lib/index.js",
   "author": "boopathi",
   "license": "MIT",
-  "homepage": "https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-shorten-identifiers",
+  "homepage": "https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-mangle",
   "repository": {
     "type": "git",
     "url": "https://github.com/boopathi/babel-minify.git"

@@ -1,6 +1,6 @@
-# babel-plugin-transform-shorten-identifiers
+# babel-plugin-transform-mangle
 
-Shorten Identifiers that can be shortened
+Mangle Identifiers that can be shortened
 
 **In :**
 
