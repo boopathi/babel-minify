@@ -11,7 +11,8 @@
     "babel-plugin-transform-evaluate": "^0.0.1",
     "babel-plugin-transform-remove-console": "^6.8.0",
     "babel-plugin-transform-remove-debugger": "^6.8.0",
-    "babel-preset-min": "^0.0.7"
+    "babel-preset-min": "^0.0.7",
+    "yargs": "^4.7.1"
   },
   "homepage": "https://github.com/boopathi/babel-minify/tree/master/packages/babel-minify",
   "repository": {
