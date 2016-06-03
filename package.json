@@ -1,9 +1,5 @@
 {
   "private": true,
-  "dependencies": {
-    "lerna": "^1.1.2",
-    "through2": "^2.0.1"
-  },
   "scripts": {
     "build": "npm run clean && gulp build",
     "clean": "gulp clean",
@@ -19,6 +15,7 @@
     "gulp-babel": "^6.1.2",
     "gulp-plumber": "^1.1.0",
     "gulp-watch": "^4.3.6",
+    "lerna": "^1.1.2",
     "mocha": "^2.5.3",
     "rimraf": "^2.5.2",
     "through2": "^2.0.1"
