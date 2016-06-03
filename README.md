@@ -2,6 +2,8 @@
 
 Some tools, babel plugins and presets to minify ES6+ code or whatever code babel understands.
 
+[![Build Status](https://travis-ci.org/boopathi/babel-minify.svg?branch=master)](https://travis-ci.org/boopathi/babel-minify)
+
 # :rotating_light: WARNING: EXPERIMENTAL
 
 ## Packages overview
