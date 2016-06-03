@@ -17,8 +17,8 @@ function renameIdentifiers(path) {
 export default function BabelPluginShortIdentifiers() {
   return {
     visitor: {
-      Program: {exit: renameIdentifiers},
-      BlockStatement: {exit: renameIdentifiers}
+      Program: renameIdentifiers,
+      BlockStatement: renameIdentifiers
     }
   };
 }
