@@ -9,6 +9,7 @@
   },
   "extends": "eslint:recommended",
   "rules": {
-    "comma-dangle": 0
+    "comma-dangle": 0,
+    "no-warning-comments": 1
   }
 }

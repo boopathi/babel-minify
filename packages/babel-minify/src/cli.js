@@ -1,6 +1,14 @@
-const yargs = require('yargs');
-const path = require('path');
-const minify = require('./');
+/**
+ * CLI:
+ * In progress
+ */
+/* TODO remove eslint-disable after complete */
+/* eslint-disable */
+
+import yargs from 'yargs';
+import path from 'path';
+import minify from './';
+
 const print = (msg) => console.log('%s', msg);
 const print_error = (msg, err) => console.log(msg, err);
 
@@ -46,4 +54,3 @@ try {
 } catch(e) {
   print_error('Error minifying the code' , e);
 }
-
