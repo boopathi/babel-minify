@@ -33,8 +33,10 @@ gulp.task('build', function() {
     .pipe(gulp.dest(dest));
 });
 
+/* eslint-disable no-unused-vars */
 gulp.task('watch', ['build'] ,function(callback) {
   watch(source, function() {
     gulp.start('build');
   });
 });
+/* eslint-enable */
