@@ -5,6 +5,7 @@ const defaultPlugins = minPreset.plugins;
 
 // other plugins
 import conditionalCompile from 'babel-plugin-conditional-compile';
+import evaluatePlugin from 'babel-plugin-transform-evaluate';
 import removeDebugger from 'babel-plugin-transform-remove-debugger';
 import removeConsole from 'babel-plugin-transform-remove-console';
 
@@ -21,6 +22,9 @@ export default function BabelMinify(inputCode, {
     __DEV__: DEV,
     __PROD__: PROD
   },
+
+  // eval constant expressions
+  evaluate = true,
 
   drop_debugger = false,
   drop_console = false,
@@ -43,6 +47,7 @@ export default function BabelMinify(inputCode, {
     }
   }
 
+  evaluate && optionalPlugins.push(evaluatePlugin);
   drop_debugger && optionalPlugins.push(removeDebugger);
   drop_console && optionalPlugins.push(removeConsole);
 
