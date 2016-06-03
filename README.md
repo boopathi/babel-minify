@@ -99,6 +99,10 @@ gulp.task('minify-app', ['webpack'], function() {
 });
 ```
 
+## Options
+
+
+
 ## LICENSE
 
 http://boopathi.mit-license.org

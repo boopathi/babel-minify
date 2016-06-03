@@ -16,13 +16,12 @@ const ARGS = yargs
   .usage('$0 input.js [options]')
 
   .describe('babelrc', '')
-  .describe('conditionals', '')
-  .describe('drop_console', '')
-  .describe('drop_debugger', '')
+  .describe('conditionals', 'Optimizations for if-s and conditional expressions')
+  .describe('drop_console', 'Remove calls to console.* functions.')
+  .describe('drop_debugger', 'Remove debugger statements.')
   .describe('m', 'Mangle names/pass mangler options.')
   .describe('o', 'Output file (default STDOUT).')
   .describe('V', 'Print version number and exit.')
-
 
   .alias('m', 'mangle')
   .alias('o', 'output')
