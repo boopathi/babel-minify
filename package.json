@@ -8,7 +8,6 @@
     "build": "npm run clean && gulp build",
     "clean": "gulp clean",
     "watch": "npm run clean && gulp watch",
-    "try": "node tests/evaluate",
     "test": "mocha --compilers js:babel-core/register packages/*/test/*.js"
   },
   "devDependencies": {
