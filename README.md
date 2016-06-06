@@ -6,6 +6,32 @@ Some tools, babel plugins and presets to minify ES6+ code or whatever code babel
 
 # :rotating_light: WARNING: EXPERIMENTAL
 
+## Track
+
+UglifyJS options that are supported or being worked on.
+
++ [x] [mangle](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-mangle)
++ [x] [dead_code](https://www.npmjs.com/package/babel-plugin-transform-dead-code-elimination)
++ [x] conditionals - [conditional-compile](https://www.npmjs.com/package/babel-plugin-conditional-compile)
++ [x] global_defs - [conditional compile options](https://www.npmjs.com/package/babel-plugin-conditional-compile#via-node-api)
++ [x] [evaluate](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-evaluate)
++ [x] [drop_debugger](https://www.npmjs.com/package/babel-plugin-transform-remove-debugger)
++ [x] [drop_console](https://www.npmjs.com/package/babel-plugin-transform-remove-console)
++ [x] [properties](https://www.npmjs.com/package/babel-plugin-transform-member-expression-literals)
++ [x] [join_vars](https://www.npmjs.com/package/babel-plugin-transform-merge-sibling-variables)
++ [x] booleans - [minify booleans](https://www.npmjs.com/package/babel-plugin-transform-minify-booleans)
++ [ ] unsafe - [undefined-to-void](https://www.npmjs.com/package/babel-plugin-transform-undefined-to-void)
++ [ ] sequences
++ [ ] if_return
++ [ ] cascade
++ [ ] keep_fargs
++ [ ] keep_fnames
+
+Others:
+
++ [x] [transform-property-literals](https://www.npmjs.com/package/babel-plugin-transform-property-literals)
++ [x] [simplify-comparison-operators](https://www.npmjs.com/package/babel-plugin-transform-simplify-comparison-operators)
+
 ## Packages overview
 
 ### [gulp-babel-minify](https://github.com/boopathi/babel-minify/blob/master/packages/gulp-babel-minify)
