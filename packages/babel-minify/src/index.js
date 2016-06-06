@@ -8,6 +8,7 @@ import conditionalCompile from 'babel-plugin-conditional-compile';
 import evaluatePlugin from 'babel-plugin-transform-evaluate';
 import removeDebugger from 'babel-plugin-transform-remove-debugger';
 import removeConsole from 'babel-plugin-transform-remove-console';
+import deadCodeElimination from 'babel-plugin-transform-dead-code-elimination';
 
 const DEV = process.env.NODE_ENV !== 'production';
 const PROD = !DEV;
@@ -25,6 +26,9 @@ export default function BabelMinify(inputCode, {
 
   // eval constant expressions
   evaluate = true,
+
+  // dead_code eliminication
+  dead_code = false,
 
   drop_debugger = false,
   drop_console = false,
@@ -48,6 +52,7 @@ export default function BabelMinify(inputCode, {
   }
 
   evaluate && optionalPlugins.push(evaluatePlugin);
+  dead_code && optionalPlugins.push(deadCodeElimination);
   drop_debugger && optionalPlugins.push(removeDebugger);
   drop_console && optionalPlugins.push(removeConsole);
 
