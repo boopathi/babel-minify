@@ -8,8 +8,6 @@ Some tools, babel plugins and presets to minify ES6+ code or whatever code babel
 
 ## Track
 
-UglifyJS options that are supported or being worked on.
-
 + [x] [mangle](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-mangle)
 + [x] [dead_code](https://www.npmjs.com/package/babel-plugin-transform-dead-code-elimination)
 + [x] conditionals - [conditional-compile](https://www.npmjs.com/package/babel-plugin-conditional-compile)
