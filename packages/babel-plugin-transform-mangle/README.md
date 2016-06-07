@@ -2,6 +2,12 @@
 
 Mangle Identifiers that can be shortened
 
+## Install
+
+```
+npm install babel-plugin-transform-mangle --save-dev
+```
+
 **In :**
 
 ```js

@@ -70,5 +70,5 @@ describe('[babel-plugin-transform-mangle] - mangle', function() {
       }
     `;
     expect(trim(actual)).toEqual(trim(expected));
-  })
+  });
 });

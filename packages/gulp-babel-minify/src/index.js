@@ -1,7 +1,7 @@
 import through2 from 'through2';
 import babelMinify from 'babel-minify';
 
-export default function(opts) {
+export default function GulpBabelMinify(opts) {
   return through2.obj(function(file, enc, callback) {
     const inputCode = file.contents.toString();
     const output = babelMinify(inputCode, opts);

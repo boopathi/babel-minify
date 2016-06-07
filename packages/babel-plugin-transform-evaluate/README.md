@@ -2,6 +2,12 @@
 
 Attempt evaluating constant expressions
 
+## Install
+
+```
+npm install babel-plugin-transform-evaluate
+```
+
 **In**
 
 ```js
