@@ -1,67 +1,84 @@
 import {transform} from 'babel-core';
-import minPreset from 'babel-preset-min';
 
-const defaultPlugins = minPreset.plugins;
-
-// other plugins
-import conditionalCompile from 'babel-plugin-conditional-compile';
-import evaluatePlugin from 'babel-plugin-transform-evaluate';
-import removeDebugger from 'babel-plugin-transform-remove-debugger';
-import removeConsole from 'babel-plugin-transform-remove-console';
-import deadCodeElimination from 'babel-plugin-transform-dead-code-elimination';
-
-const DEV = process.env.NODE_ENV !== 'production';
-const PROD = !DEV;
+// plugins
+import manglePlugin                from 'babel-plugin-transform-mangle';
+import evaluatePlugin              from 'babel-plugin-transform-evaluate';
+import conditionalCompile          from 'babel-plugin-conditional-compile';
+import removeDebugger              from 'babel-plugin-transform-remove-debugger';
+import removeConsole               from 'babel-plugin-transform-remove-console';
+import deadCodeElimination         from 'babel-plugin-transform-dead-code-elimination';
+import memberExpressionLiterals    from 'babel-plugin-transform-member-expression-literals';
+import mergeSiblingVariables       from 'babel-plugin-transform-merge-sibling-variables';
+import minifyBooleans              from 'babel-plugin-transform-minify-booleans';
+import propertyLiterals            from 'babel-plugin-transform-property-literals';
+import simplifyComparisonOperators from 'babel-plugin-transform-simplify-comparison-operators';
+import undefinedToVoid             from 'babel-plugin-transform-undefined-to-void';
 
 export default function BabelMinify(inputCode, {
-  // optimize if-s
-  conditionals = true,
+  mangle        = true,
 
-  global_defs = {
-    DEV,
-    PROD,
-    __DEV__: DEV,
-    __PROD__: PROD
-  },
-
-  // eval constant expressions
-  evaluate = true,
-
-  // dead_code eliminication
-  dead_code = false,
-
+  dead_code     = false,
+  conditionals  = true, // optimize if-s
+  global_defs   = {},
+  evaluate      = true, // eval constant expressions
   drop_debugger = false,
-  drop_console = false,
+  drop_console  = false,
+  properties    = true,
+  join_vars     = true,
+  booleans      = true,
+  unsafe        = true,
 
   // passed on to babel transform to tell whether to use babelrc
-  babelrc = false,
+  babelrc       = false,
+
+  // should there by any other plugins added to this build process
+  plugins       = [],
+
+  // if false, babel-minify can give a list of plugins to use as a preset
+  minify        = true,
 } = {}) {
 
   if (!inputCode) throw new Error('Invalid Input');
 
-  const optionalPlugins = [];
+  const minifyPlugins = [];
+
+  mangle        && minifyPlugins.push(manglePlugin);
+  dead_code     && minifyPlugins.push(deadCodeElimination);
+  evaluate      && minifyPlugins.push(evaluatePlugin);
+  drop_debugger && minifyPlugins.push(removeDebugger);
+  drop_console  && minifyPlugins.push(removeConsole);
+  properties    && minifyPlugins.push(memberExpressionLiterals);
+  properties    && minifyPlugins.push(propertyLiterals);
+  join_vars     && minifyPlugins.push(mergeSiblingVariables);
+  booleans      && minifyPlugins.push(minifyBooleans);
+  unsafe        && minifyPlugins.push(undefinedToVoid);
+  unsafe        && minifyPlugins.push(simplifyComparisonOperators);
 
   if (conditionals) {
     if (global_defs) {
-      optionalPlugins.push([conditionalCompile, {
+      minifyPlugins.push([conditionalCompile, {
         define: global_defs
       }]);
     } else {
-      optionalPlugins.push(conditionalCompile);
+      minifyPlugins.push(conditionalCompile);
     }
   }
 
-  evaluate && optionalPlugins.push(evaluatePlugin);
-  dead_code && optionalPlugins.push(deadCodeElimination);
-  drop_debugger && optionalPlugins.push(removeDebugger);
-  drop_console && optionalPlugins.push(removeConsole);
+  const finalPluginsList = [].concat(
+    minifyPlugins,
+    plugins
+  );
+
+  // if minify is false, return the plugins list to be used elsewhere
+  // maybe move this to a separate file later
+  if (!minify) return { plugins: finalPluginsList };
 
   const result = transform(inputCode, {
     babelrc,
     comments: false,
     compact: true,
     minified: true,
-    plugins: [].concat(defaultPlugins, optionalPlugins)
+    plugins: finalPluginsList
   });
 
   return result.code;

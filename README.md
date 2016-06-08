@@ -15,20 +15,15 @@ Some tools, babel plugins and presets to minify ES6+ code or whatever code babel
 + [x] [evaluate](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-evaluate)
 + [x] [drop_debugger](https://www.npmjs.com/package/babel-plugin-transform-remove-debugger)
 + [x] [drop_console](https://www.npmjs.com/package/babel-plugin-transform-remove-console)
-+ [x] [properties](https://www.npmjs.com/package/babel-plugin-transform-member-expression-literals)
++ [x] properties - [member-expression-literals](https://www.npmjs.com/package/babel-plugin-transform-member-expression-literals), [property-literals](https://www.npmjs.com/package/babel-plugin-transform-property-literals)
 + [x] [join_vars](https://www.npmjs.com/package/babel-plugin-transform-merge-sibling-variables)
 + [x] booleans - [minify booleans](https://www.npmjs.com/package/babel-plugin-transform-minify-booleans)
-+ [ ] unsafe - [undefined-to-void](https://www.npmjs.com/package/babel-plugin-transform-undefined-to-void)
++ [ ] unsafe - [undefined-to-void](https://www.npmjs.com/package/babel-plugin-transform-undefined-to-void), [simplify-comparison-operators](https://www.npmjs.com/package/babel-plugin-transform-simplify-comparison-operators)
 + [ ] sequences
 + [ ] if_return
 + [ ] cascade
 + [ ] keep_fargs
 + [ ] keep_fnames
-
-Others:
-
-+ [x] [transform-property-literals](https://www.npmjs.com/package/babel-plugin-transform-property-literals)
-+ [x] [simplify-comparison-operators](https://www.npmjs.com/package/babel-plugin-transform-simplify-comparison-operators)
 
 ## Packages overview
 
