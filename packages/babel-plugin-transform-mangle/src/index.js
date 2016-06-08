@@ -16,9 +16,7 @@ function renameIdentifiers(path, {
 
   ownBindings.filter(b => {
     if (!keep_fnames) return true;
-
-    const binding = path.scope.getBinding(b);
-    return !isFunction(binding);
+    return !isFunction(path.scope.getBinding(b));
   }).map(b => {
     let next = names.next().value;
     while (path.scope.hasBinding(next)) {
