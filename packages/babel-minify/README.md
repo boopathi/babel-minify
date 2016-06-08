@@ -20,10 +20,30 @@ const outputCode = minify(inputCode, {
 
 ## Options
 
-+ `conditionals` - [boolean] | optimize conditional expressions and statements
-+ `global_defs` - [object] Global Objects that need to be inserted at build time
-+ `evaluate` - [boolean] Evaluate constant expressions
-+ `dead_code` - [boolean] Remove dead code
-+ `drop_debugger` - [boolean] Drop `debugger` statements
-+ `drop_console` - [boolean] Drop console log, error, and info statements
-+ `babelrc` - [boolean] Should other babelrc be used for transpiling
+Options and defaults
+
+```js
+{
+  mangle        = true,
+
+  dead_code     = false,
+  conditionals  = true,
+  global_defs   = {},
+  evaluate      = true, // eval constant expressions
+  drop_debugger = false,
+  drop_console  = false,
+  properties    = true,
+  join_vars     = true,
+  booleans      = true,
+  unsafe        = true,
+
+  // passed on to babel transform to tell whether to use babelrc
+  babelrc       = false,
+
+  // should there by any other plugins added to this build process
+  plugins       = [],
+
+  // if false, babel-minify can give a list of plugins to use as a preset
+  minify        = true,
+}
+```
