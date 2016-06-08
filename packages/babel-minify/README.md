@@ -64,4 +64,4 @@ Plugins used for specific options
 + [join_vars](https://www.npmjs.com/package/babel-plugin-transform-merge-sibling-variables)
 + booleans - [minify booleans](https://www.npmjs.com/package/babel-plugin-transform-minify-booleans)
 + unsafe - [undefined-to-void](https://www.npmjs.com/package/babel-plugin-transform-undefined-to-void), [simplify-comparison-operators](https://www.npmjs.com/package/babel-plugin-transform-simplify-comparison-operators)
-+ keep_fnames - [mangle_options]()
++ keep_fnames - [mangle-options](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-mangle#options)

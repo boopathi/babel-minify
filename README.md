@@ -23,7 +23,7 @@ Some tools, babel plugins and presets to minify ES6+ code or whatever code babel
 + [ ] if_return
 + [ ] cascade
 + [ ] keep_fargs
-+ [ ] keep_fnames
++ [x] keep_fnames - [mangle-options](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-mangle#options)
 
 ## Packages overview
 
