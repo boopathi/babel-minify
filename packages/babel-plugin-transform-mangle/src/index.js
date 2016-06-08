@@ -1,11 +1,25 @@
 import nameGenerator from './namegen';
 
-function renameIdentifiers(path) {
+function isFunction(binding) {
+  return binding.path.isFunctionExpression() ||
+    binding.path.isFunctionDeclaration();
+}
+
+function renameIdentifiers(path, {
+  opts: {
+    keep_fnames = false
+  } = {}
+} = {}) {
   const bindings = path.scope.getAllBindings();
   const ownBindings = Object.keys(bindings).filter(b => path.scope.hasOwnBinding(b));
   const names = nameGenerator();
 
-  ownBindings.map(b => {
+  ownBindings.filter(b => {
+    if (!keep_fnames) return true;
+
+    const binding = path.scope.getBinding(b);
+    return !isFunction(binding);
+  }).map(b => {
     let next = names.next().value;
     while (path.scope.hasBinding(next)) {
       next = names.next().value;

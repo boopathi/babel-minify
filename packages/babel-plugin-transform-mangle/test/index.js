@@ -71,4 +71,31 @@ describe('[babel-plugin-transform-mangle] - mangle', function() {
     `;
     expect(trim(actual)).toEqual(trim(expected));
   });
+
+  it('should not mangle function names for keep_fnames', function() {
+    const babelOpts = {
+      plugins: [[mangle, {
+        keep_fnames: true
+      }]],
+      babelrc: false
+    };
+
+    const actual = transform(`
+      function hello() {}
+      var foo = function world() {};
+      var bar = {
+        foo: function baz() {}
+      };
+    `, babelOpts).code;
+
+    const expected = `
+      function hello() {}
+      var a = function world() {};
+      var b = {
+        foo: function baz() {}
+      };
+    `;
+
+    expect(trim(actual)).toEqual(trim(expected));
+  });
 });
