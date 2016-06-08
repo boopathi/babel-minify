@@ -47,3 +47,19 @@ Options and defaults
   minify        = true,
 }
 ```
+
+## Internals
+
+Plugins used for specific options
+
++ [mangle](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-mangle)
++ [dead_code](https://www.npmjs.com/package/babel-plugin-transform-dead-code-elimination)
++ conditionals - [conditional-compile](https://www.npmjs.com/package/babel-plugin-conditional-compile)
++ global_defs - [conditional compile options](https://www.npmjs.com/package/babel-plugin-conditional-compile#via-node-api)
++ [evaluate](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-evaluate)
++ [drop_debugger](https://www.npmjs.com/package/babel-plugin-transform-remove-debugger)
++ [drop_console](https://www.npmjs.com/package/babel-plugin-transform-remove-console)
++ properties - [member-expression-literals](https://www.npmjs.com/package/babel-plugin-transform-member-expression-literals), [property-literals](https://www.npmjs.com/package/babel-plugin-transform-property-literals)
++ [join_vars](https://www.npmjs.com/package/babel-plugin-transform-merge-sibling-variables)
++ booleans - [minify booleans](https://www.npmjs.com/package/babel-plugin-transform-minify-booleans)
++ unsafe - [undefined-to-void](https://www.npmjs.com/package/babel-plugin-transform-undefined-to-void), [simplify-comparison-operators](https://www.npmjs.com/package/babel-plugin-transform-simplify-comparison-operators)
