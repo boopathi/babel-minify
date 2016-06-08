@@ -7,18 +7,16 @@ Mangle Identifiers that can be shortened
 ```
 npm install babel-plugin-transform-mangle --save-dev
 ```
+## Example
 
 **In :**
 
 ```js
 import MyAwesomeLib from 'my-awesome-lib';
-
 const ReallyLongName = "1";
-
 class BlahBlahBlahBlah {
   method() {}
 }
-
 function doSomethingWithAReallyLongName() {
   var localVariable, someIdentifier;
 }
@@ -28,14 +26,15 @@ function doSomethingWithAReallyLongName() {
 
 ```js
 import a from 'my-awesome-lib';
-
 const b = "1";
-
 class c {
   method() {}
 }
-
 function d() {
   var a, b;
 }
 ```
+
+## Options
+
++ `keep_fnames`: [Default: false] Don't mangle function names for FunctionExpressions and FunctionDeclarations - Useful for code depending on `fn.name`.

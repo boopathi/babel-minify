@@ -36,6 +36,7 @@ Options and defaults
   join_vars     = true,
   booleans      = true,
   unsafe        = true,
+  keep_fnames   = false,
 
   // passed on to babel transform to tell whether to use babelrc
   babelrc       = false,
@@ -63,3 +64,4 @@ Plugins used for specific options
 + [join_vars](https://www.npmjs.com/package/babel-plugin-transform-merge-sibling-variables)
 + booleans - [minify booleans](https://www.npmjs.com/package/babel-plugin-transform-minify-booleans)
 + unsafe - [undefined-to-void](https://www.npmjs.com/package/babel-plugin-transform-undefined-to-void), [simplify-comparison-operators](https://www.npmjs.com/package/babel-plugin-transform-simplify-comparison-operators)
++ keep_fnames - [mangle_options]()

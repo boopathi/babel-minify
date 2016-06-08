@@ -27,6 +27,7 @@ export default function BabelMinify(inputCode, {
   join_vars     = true,
   booleans      = true,
   unsafe        = true,
+  keep_fnames   = false,
 
   // passed on to babel transform to tell whether to use babelrc
   babelrc       = false,
@@ -42,7 +43,11 @@ export default function BabelMinify(inputCode, {
 
   const minifyPlugins = [];
 
-  mangle        && minifyPlugins.push(manglePlugin);
+  if (mangle) {
+    if (keep_fnames) minifyPlugins.push([manglePlugin, { keep_fnames }]);
+    else minifyPlugins.push(manglePlugin);
+  }
+
   dead_code     && minifyPlugins.push(deadCodeElimination);
   evaluate      && minifyPlugins.push(evaluatePlugin);
   drop_debugger && minifyPlugins.push(removeDebugger);
