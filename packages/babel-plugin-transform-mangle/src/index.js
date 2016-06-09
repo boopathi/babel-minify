@@ -2,7 +2,9 @@ import nameGenerator from './namegen';
 
 function isFunction(binding) {
   return binding.path.isFunctionExpression() ||
-    binding.path.isFunctionDeclaration();
+    binding.path.isFunctionDeclaration() ||
+    binding.path.isClassDeclaration() ||
+    binding.path.isClassExpression();
 }
 
 function renameIdentifiers(path, {
