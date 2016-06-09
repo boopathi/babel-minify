@@ -1,8 +1,13 @@
 {
   "name": "babel-plugin-transform-evaluate",
   "version": "0.1.0",
-  "description": "",
+  "description": "Evaluate constant expressions",
   "main": "lib/index.js",
   "author": "boopathi",
-  "license": "MIT"
+  "license": "MIT",
+  "homepage": "https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-evaluate",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/boopathi/babel-minify.git"
+  }
 }

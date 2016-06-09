@@ -39,7 +39,7 @@ export default function BabelMinify(inputCode, {
   minify        = true,
 } = {}) {
 
-  if (!inputCode) throw new Error('Invalid Input');
+  if (!inputCode && minify) throw new Error('Invalid Input');
 
   const minifyPlugins = [];
 
