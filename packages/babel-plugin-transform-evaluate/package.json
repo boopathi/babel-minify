@@ -5,9 +5,6 @@
   "main": "lib/index.js",
   "author": "boopathi",
   "license": "MIT",
-  "homepage": "https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-evaluate",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/boopathi/babel-minify.git"
-  }
+  "homepage": "https://github.com/boopathi/babel-minify",
+  "repository": "https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-evaluate"
 }

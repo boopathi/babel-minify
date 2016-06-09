@@ -9,9 +9,6 @@
     "babel-minify": "^0.1.1",
     "through2": "^2.0.1"
   },
-  "homepage": "https://github.com/boopathi/babel-minify/tree/master/packages/gulp-babel-minify",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/boopathi/babel-minify.git"
-  }
+  "homepage": "https://github.com/boopathi/babel-minify",
+  "repository": "https://github.com/boopathi/babel-minify/tree/master/packages/gulp-babel-minify"
 }
