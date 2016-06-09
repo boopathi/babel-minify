@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-transform-mangle",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Converts var longname; to var a;",
   "main": "lib/index.js",
   "author": "boopathi",
