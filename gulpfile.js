@@ -2,6 +2,8 @@ const gulp = require('gulp');
 const babel = require('gulp-babel');
 const through2 = require('through2');
 const watch = require('gulp-watch');
+const newer = require('gulp-newer');
+const gutil = require('gulp-util');
 const rimraf = require('rimraf');
 const plumber = require('gulp-plumber');
 
@@ -28,6 +30,11 @@ gulp.task('build', function() {
       file._path = file.path;
       file.path = file.path.replace(srcEx, libFragment);
       callback(null, file);
+    }))
+    .pipe(newer(dest))
+    .pipe(through2.obj(function(file, env, callback) {
+      gutil.log('Compiling', file._path);
+      callback();
     }))
     .pipe(babel())
     .pipe(gulp.dest(dest));
