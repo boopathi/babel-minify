@@ -36,3 +36,10 @@
   // kick start
   minifier.postMessage({ start: true });
 })();
+
+// service worker
+(function() {
+  if (navigator.serviceWorker) {
+    navigator.serviceWorker.register('sw.js');
+  }
+})();
