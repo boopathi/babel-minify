@@ -1,0 +1,33 @@
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+}
+
+.input-container, .output-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#input, #output {
+  width: 100%;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+.runner {
+  position: fixed;
+  top: 0;
+  width: 50px;
+  margin-left: 50%;
+  left: -50px;
+  font-size: larger;
+}
+
+.runner #run {
+  width: 100%;
+  background: white;
+  border: solid 1px black;
+  border-radius: 5px;
+}
