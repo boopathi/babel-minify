@@ -1,24 +1,13 @@
 import path from 'path';
-import yargs from 'yargs';
 import minify from '../';
-
-export function earlyExits(argv) {
-  if (argv.version) {
-    console.log(require('../package.json').version);
-    process.exit(0);
-  }
-
-  if (argv.h || argv.help) {
-    console.log(yargs.usage());
-    process.exit(0);
-  }
-}
 
 export function getFilesAndMinify(argv, opts) {
   argv.results = argv._
     .map(fileOrDir => {
-      if (opts.fs.statSync(fileOrDir).isDirectory())
-        throw new Error('Directories not supported. Pass a file');
+      if (opts.fs.statSync(fileOrDir).isDirectory()) {
+        opts.logger.error('Directories are not supported.');
+        throw new Error('Input file is a Directory');
+      }
       return fileOrDir;
     })
     .map(file => ({
@@ -38,13 +27,14 @@ export function putFiles(argv, opts) {
         if (argv.output)
           opts.fs.writeFileSync(argv.output, contents);
         else
-          console.log(contents);
+          opts.logger.log(contents);
       } else {
         if (argv.outputDir) {
           const basename = path.basename(filename);
           opts.fs.writeFileSync(path.join(argv.outputDir, basename), result);
         } else {
-          throw new Error('output Directory unspecified');
+          opts.logger.error('Output Directory unspecified');
+          throw new Error('Output Directory unspecified');
         }
       }
     });
@@ -52,7 +42,6 @@ export function putFiles(argv, opts) {
 
 export function runTasks(argv, opts) {
   const tasks = [
-    earlyExits,
     getFilesAndMinify,
     putFiles
   ];

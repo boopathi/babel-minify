@@ -1,8 +1,6 @@
-import yargs from 'yargs';
-
-export function getArgv(argv) {
-  return yargs(argv)
-    .usage('$0 input.js [options]')
+export default function yargsOptions(argv) {
+  return require('yargs')(argv)
+    .usage('$0 [options] input.js')
 
     .help('help')
     .alias('help', 'h')
@@ -107,5 +105,5 @@ export function getArgv(argv) {
     })
 
     .demand(1)
-    .argv;
+    .argv
 }
