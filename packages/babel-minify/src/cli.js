@@ -1,10 +1,3 @@
-/**
- * CLI:
- * In progress
- */
-/* TODO remove eslint-disable after complete */
-/* eslint-disable */
-
 import yargs from 'yargs';
 import path from 'path';
 import fs from 'fs';
