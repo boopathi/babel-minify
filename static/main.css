@@ -14,6 +14,8 @@
   width: 100%;
   box-sizing: border-box;
   height: 100%;
+  font-size: smaller;
+  font-family: "Lucida Console", "Monaco", monospace
 }
 
 .runner {
