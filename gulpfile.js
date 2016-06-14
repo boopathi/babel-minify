@@ -47,3 +47,35 @@ gulp.task('watch', ['build'] ,function(callback) {
   });
 });
 /* eslint-enable */
+
+
+/**
+ * Build for browser
+ */
+const browserify = require('browserify');
+const babelify = require('babelify');
+const vinylSource = require('vinyl-source-stream');
+const vinylBuffer = require('vinyl-buffer');
+const uglify = require('gulp-uglify');
+const copy = require('gulp-copy');
+
+gulp.task('browser', function() {
+  const bundler = browserify('./utils/browser.js', {
+    standalone: 'BabelMinify'
+  }).transform(babelify, {
+    presets: ['es2015']
+  });
+
+  return bundler.bundle()
+    .pipe(vinylSource('babel-minify.js'))
+    .pipe(vinylBuffer())
+    .pipe(uglify())
+    .pipe(gulp.dest('./build'));
+});
+
+gulp.task('gh-pages', ['browser'], function() {
+  return gulp.src('build/*')
+    .pipe(copy('../babel-minify-gh-pages/build', {
+      prefix: 1
+    }));
+});

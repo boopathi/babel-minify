@@ -25,5 +25,8 @@
     "yargs": "^4.7.1"
   },
   "homepage": "https://github.com/boopathi/babel-minify",
-  "repository": "https://github.com/boopathi/babel-minify/tree/master/packages/babel-minify"
+  "repository": "https://github.com/boopathi/babel-minify/tree/master/packages/babel-minify",
+  "browserify": {
+    "transform": [["babelify", { "presets": ["es2015"] }]]
+  }
 }
