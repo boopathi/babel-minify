@@ -31,7 +31,7 @@ export function putFiles(argv, opts) {
       } else {
         if (argv.outputDir) {
           const basename = path.basename(filename);
-          opts.fs.writeFileSync(path.join(argv.outputDir, basename), result);
+          opts.fs.writeFileSync(path.join(argv.outputDir, basename), contents);
         } else {
           opts.logger.error('Output Directory unspecified');
           throw new Error('Output Directory unspecified');
