@@ -5,7 +5,9 @@
   "main": "lib/index.js",
   "author": "boopathi",
   "license": "MIT",
-  "bin": "lib/cli.js",
+  "bin": {
+    "babel-minify": "lib/cli.js"
+  },
   "dependencies": {
     "babel-core": "^6.9.1",
     "babel-plugin-conditional-compile": "^0.0.4",

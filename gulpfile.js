@@ -9,7 +9,7 @@ const plumber = require('gulp-plumber');
 
 // for compilation
 const source = './packages/*/src/**/*.js';
-const dest = 'packages';
+const dest = './packages';
 const srcEx = new RegExp("(packages/[^/]+)/src/");
 const libFragment = "$1/lib/";
 
@@ -34,7 +34,7 @@ gulp.task('build', function() {
     .pipe(newer(dest))
     .pipe(through2.obj(function(file, env, callback) {
       gutil.log('Compiling', file._path);
-      callback();
+      callback(null, file);
     }))
     .pipe(babel())
     .pipe(gulp.dest(dest));
