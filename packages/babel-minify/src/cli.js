@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import yargs from 'yargs';
 import path from 'path';
 import fs from 'fs';
