@@ -1,4 +1,6 @@
 {
+  "name": "babel-minify",
+  "description": "Attempt at writing minify story for ES2015+",
   "private": true,
   "scripts": {
     "build": "npm run clean && gulp build",
