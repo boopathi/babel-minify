@@ -83,6 +83,7 @@ export default function BabelMinify(inputCode, {
     comments: false,
     compact: true,
     minified: true,
+    passPerPreset: true,
     plugins: finalPluginsList
   });
 
