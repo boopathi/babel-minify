@@ -3,14 +3,16 @@ const fs = require('fs');
 const rimraf = require('rimraf');
 const exec = require('child_process').execSync;
 
+const root = path.join(__dirname, '..');
+
 module.exports = cleanEmptyModules;
 
 if (require.main === module) {
   cleanEmptyModules();
 }
 
-function cleanEmptyModules(root = path.join(__dirname, '../')) {
-  const emptyMods = getEmptyModules(root);
+function cleanEmptyModules() {
+  const emptyMods = getEmptyModules();
 
   const gitStatus = exec('git status --porcelain', {
     cwd: root,
@@ -45,7 +47,7 @@ function cleanEmptyModules(root = path.join(__dirname, '../')) {
   };
 }
 
-function getEmptyModules(root) {
+function getEmptyModules() {
   return fs
     .readdirSync(path.join(root, 'packages'))
     .filter(mod => isDir(path.join(root, 'packages', mod)))
