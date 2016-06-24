@@ -32,8 +32,11 @@ export default function BabelMinify(inputCode, {
   // passed on to babel transform to tell whether to use babelrc
   babelrc       = false,
 
-  // should there by any other plugins added to this build process
+  // should there be any other plugins added to this build process
   plugins       = [],
+
+  // should there be any other presets
+  presets       = [],
 
   // if false, babel-minify can give a list of plugins to use as a preset
   minify        = true,
@@ -69,14 +72,15 @@ export default function BabelMinify(inputCode, {
     }
   }
 
-  const finalPluginsList = [].concat(
-    minifyPlugins,
-    plugins
-  );
+  const finalPresets = [].concat([
+      {
+        plugins: minifyPlugins
+      }
+  ], presets);
 
   // if minify is false, return the plugins list to be used elsewhere
   // maybe move this to a separate file later
-  if (!minify) return { plugins: finalPluginsList };
+  if (!minify) return { plugins: minifyPlugins };
 
   const result = transform(inputCode, {
     babelrc,
@@ -84,7 +88,8 @@ export default function BabelMinify(inputCode, {
     compact: true,
     minified: true,
     passPerPreset: true,
-    plugins: finalPluginsList
+    presets: finalPresets,
+    plugins
   });
 
   return result.code;
