@@ -6,6 +6,7 @@ const newer = require('gulp-newer');
 const gutil = require('gulp-util');
 const rimraf = require('rimraf');
 const plumber = require('gulp-plumber');
+const cleanEmptyModules = require('./utils/clean-empty-modules');
 
 // for compilation
 const source = './packages/*/src/**/*.js';
@@ -20,6 +21,21 @@ gulp.task('default', ['build']);
 
 gulp.task('clean', function(cb) {
   rimraf.sync(libs, { glob: true });
+
+  const out = cleanEmptyModules();
+
+  if (out.removed.length > 0)
+    gutil.log(gutil.colors.cyan('Empty Packages - REMOVED'));
+  out.removed.forEach(mod => {
+    gutil.log(gutil.colors.red(mod));
+  });
+
+  if (out.kept.length > 0)
+    gutil.log(gutil.colors.cyan('Unstaged Empty Packages - NOT REMOVED'));
+  out.kept.forEach(mod => {
+    gutil.log(gutil.colors.yellow(mod));
+  });
+
   cb();
 });
 
@@ -33,7 +49,7 @@ gulp.task('build', function() {
     }))
     .pipe(newer(dest))
     .pipe(through2.obj(function(file, env, callback) {
-      gutil.log('Compiling', file._path);
+      gutil.log('Compiling', gutil.colors.cyan(file._path));
       callback(null, file);
     }))
     .pipe(babel())
