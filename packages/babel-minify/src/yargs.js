@@ -94,9 +94,13 @@ export default function yargsOptions(argv) {
       'default': undefined,
       describe: '[default false] '
     })
+    .option('presets', {
+      type: 'array',
+      describe: '[default []] pass presets to babel transformation'
+    })
     .option('plugins', {
       type: 'array',
-      describe: '[default true]'
+      describe: '[default []] pass plugins to babel transformation'
     })
     .option('minify', {
       type: 'boolean',
