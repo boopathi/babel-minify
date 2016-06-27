@@ -34,6 +34,9 @@ export default function BabelMinify(inputCode, {
   unsafe         = true,
   keep_fnames    = false,
 
+  // number of passes
+  passes        = 1,
+
   // passed on to babel transform to tell whether to use babelrc
   babelrc        = false,
 
@@ -116,15 +119,19 @@ export default function BabelMinify(inputCode, {
   // maybe move this to a separate file later
   if (!minify) return { plugins: minifyPlugins, presets: passes };
 
-  const result = transform(inputCode, {
-    babelrc,
-    comments: false,
-    compact: false,
-    minified: false,
-    passPerPreset: true,
-    presets: passes,
-    plugins: minifyPlugins
-  });
+  let result = inputCode;
+
+  while (passes-- > 0) {
+    result = transform(result.code, {
+      babelrc,
+      comments: false,
+      compact: true,
+      minified: true,
+      passPerPreset: true,
+      presets: passes,
+      plugins: minifyPlugins
+    });
+  }
 
   return result.code;
 }
