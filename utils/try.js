@@ -41,20 +41,22 @@ function a() {
 `;
 
 input = `
-if (true) {
+if (false) {
   let x = 5;
   var a = 1;
   {
     var z = 6;
     var a = 5;
   }
-  function c() {
+  function a() {
     var a = 1;
   }
 } else {
   var x = 4, y = 5, {a: x} = {}, [{b: h = 5}, ...c] = something;
   let n = 5;
 }
+
+if (false) var x = 6;
 `
 
 const output = babel.transform(input, {

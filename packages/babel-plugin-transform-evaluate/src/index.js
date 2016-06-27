@@ -23,7 +23,7 @@ export default function({types: t}) {
         }
       },
 
-      Conditional: function Conditional(path) {
+      Conditional(path) {
         const evaluated = path.get('test').evaluate();
         if (!evaluated.confident) {
           return path.skip();
@@ -39,10 +39,13 @@ export default function({types: t}) {
           if (blockPath.isBlockStatement()) {
             const blockFnScope = blockPath.getFunctionParent();
             blockPath.traverse({
-              VariableDeclaration: function VariableDeclaration(varPath) {
+              VariableDeclaration(varPath) {
                 if (varPath.isVariableDeclaration({kind:'var'}) && varPath.getFunctionParent() === blockFnScope) {
                   declarations.push(varPath);
                 }
+              },
+              FunctionDeclaration(varPath) {
+                declarations.push(varPath);
               }
             });
           } else if (blockPath.isVariableDeclaration({ kind: 'var' })) {
