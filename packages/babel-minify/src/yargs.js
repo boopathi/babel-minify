@@ -92,7 +92,7 @@ export default function yargsOptions(argv) {
 
     .option('passes', {
       type: 'number',
-      alias: 'p'
+      alias: 'p',
       'default': 1,
       describe: 'Number of passes - [default 1]'
     })
