@@ -34,24 +34,28 @@ function a() {
     console.log('neither');
   }
 
-  if (true) {
-    var a = 5;
+  if (false) {
+    var {a} = something;
   }
 }
 `;
 
-// input = `
-// if (false) {
-//   let x = 5;
-//   var a = 1;
-//   {
-//     var z = 6;
-//   }
-//   function c() {
-//     var a = 1;
-//   }
-// }
-// `
+input = `
+if (true) {
+  let x = 5;
+  var a = 1;
+  {
+    var z = 6;
+    var a = 5;
+  }
+  function c() {
+    var a = 1;
+  }
+} else {
+  var x = 4, y = 5, {a: x} = {}, [{b: h = 5}, ...c] = something;
+  let n = 5;
+}
+`
 
 const output = babel.transform(input, {
   babelrc: false,

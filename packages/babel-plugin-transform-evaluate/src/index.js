@@ -55,9 +55,20 @@ export default function({types: t}) {
         function dontForgetAlternate(blockPath) {
           const declarators = [];
 
+          if (blockPath.node === null) return null;
+
           getVars(blockPath).forEach(decl => {
-            decl.get('declarations').forEach(dr => {
-              declarators.push(t.variableDeclarator(dr.node.id));
+            const bindingIdentifiers = decl.getBindingIdentifiers();
+            Object.keys(bindingIdentifiers).forEach(id => {
+              let alreadyFound = false;
+              declarators.forEach(dl => {
+                if (dl.id.name === id) {
+                  alreadyFound = true;
+                }
+              });
+              if (!alreadyFound) {
+                declarators.push(t.variableDeclarator(bindingIdentifiers[id]));
+              }
             });
           });
 
@@ -72,20 +83,25 @@ export default function({types: t}) {
           const toBlock = path.get(to);
           const removeBlock = path.get(remove);
 
-          const decl = dontForgetAlternate(removeBlock);
-          if (decl) replacements.push(t.BlockStatement([decl]));
-
           if (toBlock.isBlockStatement()) {
-            if (Object.keys(toBlock.scope.bindings).length > 0 || getVars(toBlock).length > 0) {
+            if (Object.keys(toBlock.scope.bindings).length > 0) {
               replacements.push(toBlock.node);
             } else {
               toBlock.node.body.forEach(e => replacements.push(e));
             }
-          } else if (toBlock.isVariableDeclaration()) {
-            replacements.push(t.BlockStatement([toBlock.node]));
-          } else if (toBlock.node !== null) {
+          } else if (toBlock.isVariableDeclaration() || toBlock.node !== null) {
             replacements.push(toBlock.node);
           }
+
+          const decl = dontForgetAlternate(removeBlock);
+          if (decl) {
+            if (to === 'alternate') {
+              replacements.unshift(decl);
+            } else {
+              replacements.push(decl);
+            }
+          }
+
           path.replaceWithMultiple(replacements);
         }
       },
