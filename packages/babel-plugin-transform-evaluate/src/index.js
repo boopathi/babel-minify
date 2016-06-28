@@ -37,10 +37,9 @@ export default function({types: t}) {
         function getVars(blockPath) {
           const declarations = [];
           if (blockPath.isBlockStatement()) {
-            const blockFnScope = blockPath.getFunctionParent();
             blockPath.traverse({
               VariableDeclaration(varPath) {
-                if (varPath.isVariableDeclaration({kind:'var'}) && varPath.getFunctionParent() === blockFnScope) {
+                if (varPath.isVariableDeclaration({ kind:'var' }) && varPath.getFunctionParent() === blockPath.getFunctionParent()) {
                   declarations.push(varPath);
                 }
               },
