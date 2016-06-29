@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-transform-conditionals",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Optimize conditional statements",
   "main": "lib/index.js",
   "author": "boopathi",
@@ -8,6 +8,15 @@
   "homepage": "https://github.com/boopathi/babel-minify",
   "repository": "https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-conditionals",
   "browserify": {
-    "transform": [["babelify", { "presets": ["es2015"] }]]
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ]
+        }
+      ]
+    ]
   }
 }
