@@ -9,6 +9,7 @@
 
   var minifierOpts = {
     mangle: true,
+    mangle_globals: false,
     dead_code: false,
     conditionals: true,
     evaluate: true,
