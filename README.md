@@ -13,6 +13,7 @@ https://boopathi.in/babel-minify/
 ## Track
 
 + [x] [mangle](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-mangle)
++ [x] mangle_globals - [mangle-options](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-mangle#options)
 + [x] [dead_code](https://www.npmjs.com/package/babel-plugin-transform-dead-code-elimination)
 + [x] [conditionals](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-conditionals)
 + [ ] global_defs
