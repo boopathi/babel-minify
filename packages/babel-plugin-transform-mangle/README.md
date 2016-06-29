@@ -38,3 +38,5 @@ function d() {
 ## Options
 
 + `keep_fnames`: [Default: false] Don't mangle function names for FunctionExpressions and FunctionDeclarations - Useful for code depending on `fn.name`.
+
++ `mangle_globals`: [Default: false] Mangle variables in the outermost scope.

@@ -27,6 +27,12 @@ export default function yargsOptions(argv) {
       'default': undefined,
       describe: '[default true] Mangle names'
     })
+    .option('mangle_globals', {
+      type: 'boolean',
+      'default': false,
+      describe: '[default false] Mangle global variables'
+    })
+
     .option('dead_code', {
       alias: 'dead-code',
       type: 'boolean',
@@ -39,11 +45,6 @@ export default function yargsOptions(argv) {
       describe: '[default false] Optimize conditionals statements and expressions'
     })
 
-    .option('global_defs', {
-      alias: 'global-defs',
-      type: 'array',
-      describe: '[default {}] Global Variables'
-    })
     .option('evaluate', {
       type: 'boolean',
       'default': undefined,

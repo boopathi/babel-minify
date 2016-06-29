@@ -1,7 +1,9 @@
-var a = "something";
-var b = {
-  method1() {},
-  method2: function c() {
-    a += "somethingElse"
+(function() {
+  var a = "something";
+  var b = {
+    method1() {},
+    method2: function c() {
+      a += "somethingElse"
+    }
   }
-}
+})();

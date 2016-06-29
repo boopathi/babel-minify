@@ -28,10 +28,13 @@ function renameIdentifiers(path, {
   });
 }
 
-export default function BabelPluginShortIdentifiers() {
+export default function Mangle() {
   return {
     visitor: {
-      Program: renameIdentifiers,
+      Program(path, options) {
+        if (options.opts && options.opts.mangle_globals)
+          renameIdentifiers(path, options);
+      },
       BlockStatement: renameIdentifiers
     }
   };

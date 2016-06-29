@@ -24,28 +24,31 @@ Options and defaults
 
 ```js
 {
-  mangle        = true,
+  mangle         = true,
+  mangle_globals = false,
 
-  dead_code     = false,
-  conditionals  = true,
-  global_defs   = {},
-  evaluate      = true, // eval constant expressions
-  drop_debugger = false,
-  drop_console  = false,
-  properties    = true,
-  join_vars     = true,
-  booleans      = true,
-  unsafe        = true,
-  keep_fnames   = false,
+  dead_code      = false,
+  conditionals   = true,
+  evaluate       = true, // eval constant expressions
+  drop_debugger  = false,
+  drop_console   = false,
+  properties     = true,
+  join_vars      = true,
+  booleans       = true,
+  unsafe         = true,
+  keep_fnames    = false,
 
   // passed on to babel transform to tell whether to use babelrc
-  babelrc       = false,
+  babelrc        = false,
 
-  // should there by any other plugins added to this build process
-  plugins       = [],
+  // should there be any other plugins added to this build process
+  plugins        = [],
+
+  // should there be any other presets
+  presets        = [],
 
   // if false, babel-minify can give a list of plugins to use as a preset
-  minify        = true,
+  minify         = true,
 }
 ```
 
@@ -54,9 +57,9 @@ Options and defaults
 Plugins used for specific options
 
 + [mangle](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-mangle)
++ mangle_global - [mangle-options](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-mangle#options)
 + [dead_code](https://www.npmjs.com/package/babel-plugin-transform-dead-code-elimination)
-+ conditionals - [conditional-compile](https://www.npmjs.com/package/babel-plugin-conditional-compile)
-+ global_defs - [conditional compile options](https://www.npmjs.com/package/babel-plugin-conditional-compile#via-node-api)
++ [x] [conditionals](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-conditionals)
 + [evaluate](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-evaluate)
 + [drop_debugger](https://www.npmjs.com/package/babel-plugin-transform-remove-debugger)
 + [drop_console](https://www.npmjs.com/package/babel-plugin-transform-remove-console)
