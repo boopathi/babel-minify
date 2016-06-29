@@ -25,7 +25,6 @@ export default function BabelMinify(inputCode, {
 
   dead_code      = false,
   conditionals   = true,
-  global_defs    = {},
   evaluate       = true, // eval constant expressions
   drop_debugger  = false,
   drop_console   = false,

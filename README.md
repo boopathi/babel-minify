@@ -14,8 +14,8 @@ https://boopathi.in/babel-minify/
 
 + [x] [mangle](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-mangle)
 + [x] [dead_code](https://www.npmjs.com/package/babel-plugin-transform-dead-code-elimination)
-+ [x] conditionals - [conditional-compile](https://www.npmjs.com/package/babel-plugin-conditional-compile)
-+ [x] global_defs - [conditional compile options](https://www.npmjs.com/package/babel-plugin-conditional-compile#via-node-api)
++ [x] [conditionals](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-conditionals)
++ [ ] global_defs
 + [x] [evaluate](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-evaluate)
 + [x] [drop_debugger](https://www.npmjs.com/package/babel-plugin-transform-remove-debugger)
 + [x] [drop_console](https://www.npmjs.com/package/babel-plugin-transform-remove-console)
