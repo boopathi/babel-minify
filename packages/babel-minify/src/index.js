@@ -119,7 +119,7 @@ export default function BabelMinify(inputCode, {
   // maybe move this to a separate file later
   if (!minify) return { plugins: minifyPlugins, presets: passes };
 
-  let result = inputCode;
+  let result = {code: inputCode};
 
   while (passes-- > 0) {
     result = transform(result.code, {
