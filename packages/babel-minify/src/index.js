@@ -14,7 +14,6 @@ import propertyLiterals            from 'babel-plugin-transform-property-literal
 import simplifyComparisonOperators from 'babel-plugin-transform-simplify-comparison-operators';
 import undefinedToVoid             from 'babel-plugin-transform-undefined-to-void';
 
-Error.stackTraceLimit = Infinity;
 /**
  * The main function of the minifier
  * @function
