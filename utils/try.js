@@ -65,9 +65,7 @@ if (false) var x = 6;
 //   plugins: [plugin]
 // });
 
-const output = minify(input, {
-  mangle_globals: false
-});
+const output = minify(input);
 
 console.log('Input:');
 console.log(input);

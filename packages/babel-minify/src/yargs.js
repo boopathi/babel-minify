@@ -90,6 +90,12 @@ export default function yargsOptions(argv) {
       describe: '[default true] preserve function names prevent mangling function names'
     })
 
+    .option('npasses', {
+      type: 'number',
+      alias: 'p',
+      'default': 1,
+      describe: 'Number of passes - [default 1]'
+    })
     .option('babelrc', {
       type: 'boolean',
       'default': undefined,
