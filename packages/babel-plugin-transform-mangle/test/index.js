@@ -55,4 +55,20 @@ describe('[babel-plugin-transform-mangle] - mangle', function() {
     const {actualT, expectedT} = getTestData('keep_fnames', babelOpts);
     expect(actualT).toEqual(expectedT);
   });
+
+  it('should not mangle globals by default', function() {
+    const {actualT, expectedT} = getTestData('dont_mangle_globals', babelOpts);
+    expect(actualT).toEqual(expectedT);
+  });
+
+  it('should mangle_globals when set to true', function() {
+    const babelOpts = {
+      plugins: [[mangle, {
+        mangle_globals: true
+      }]],
+      babelrc: false
+    };
+    const {actualT, expectedT} = getTestData('mangle_globals', babelOpts);
+    expect(actualT).toEqual(expectedT);
+  });
 });
