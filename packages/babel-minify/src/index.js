@@ -14,44 +14,57 @@ import propertyLiterals            from 'babel-plugin-transform-property-literal
 import simplifyComparisonOperators from 'babel-plugin-transform-simplify-comparison-operators';
 import undefinedToVoid             from 'babel-plugin-transform-undefined-to-void';
 
+Error.stackTraceLimit = Infinity;
+/**
+ * The main function of the minifier
+ * @function
+ */
 export default function BabelMinify(inputCode, {
-  mangle        = true,
+  mangle         = true,
+  mangle_globals = false,
 
-  dead_code     = false,
-  conditionals  = true,
-  global_defs   = {},
-  evaluate      = true, // eval constant expressions
-  drop_debugger = false,
-  drop_console  = false,
-  properties    = true,
-  join_vars     = true,
-  booleans      = true,
-  unsafe        = true,
-  keep_fnames   = false,
+  dead_code      = false,
+  conditionals   = true,
+  global_defs    = {},
+  evaluate       = true, // eval constant expressions
+  drop_debugger  = false,
+  drop_console   = false,
+  properties     = true,
+  join_vars      = true,
+  booleans       = true,
+  unsafe         = true,
+  keep_fnames    = false,
 
   // passed on to babel transform to tell whether to use babelrc
-  babelrc       = false,
+  babelrc        = false,
 
   // should there be any other plugins added to this build process
-  plugins       = [],
+  plugins        = [],
 
   // should there be any other presets
-  presets       = [],
+  presets        = [],
 
   // if false, babel-minify can give a list of plugins to use as a preset
-  minify        = true,
-} = {}) {
+  minify         = true,
+}                = {}) {
 
   if (typeof inputCode !== 'string' && minify) throw new Error('Invalid Input');
 
-  const minifyPlugins = [];
+  /**
+   * The final list of plugins that are applied in babel transform
+   * This is the first list that's preffered in babel transform, the plugins
+   * that go into this take one pass, plugins that prefer separate passes go into
+   * the {finalPresets}
+   * @type {Array}
+   */
+  let minifyPlugins = [];
 
-  if (mangle) {
-    if (keep_fnames) minifyPlugins.push([manglePlugin, { keep_fnames }]);
-    else minifyPlugins.push(manglePlugin);
-  }
+  /**
+   * The final list of presets that are applied in SEPARATE passes
+   * @type {Array}
+   */
+  let passes = [];
 
-  dead_code     && minifyPlugins.push(deadCodeElimination);
   evaluate      && minifyPlugins.push(evaluatePlugin);
   drop_debugger && minifyPlugins.push(removeDebugger);
   drop_console  && minifyPlugins.push(removeConsole);
@@ -61,24 +74,44 @@ export default function BabelMinify(inputCode, {
   booleans      && minifyPlugins.push(minifyBooleans);
   unsafe        && minifyPlugins.push(undefinedToVoid);
   unsafe        && minifyPlugins.push(simplifyComparisonOperators);
-  conditionals  && minifyPlugins.push(conditionalsPlugin);
 
-  const firstPass = [];
-  const passes = [];
+  /**
+   * Append all user passed plugins to minifyPlugins
+   */
+  minifyPlugins = minifyPlugins.concat(plugins);
 
-  minifyPlugins.forEach(plugin => {
-    if (plugin.meta && plugin.meta.separatePass) {
-      passes.push([
-        { plugins: [plugin] }
-      ]);
-    }
-  });
+  /**
+   * Things that remove code or replace code in a major way,
+   * we just use then in separate presets to enable them to be
+   * under separate passes
+   */
+  if (dead_code) {
+    passes.push({plugins: [deadCodeElimination]});
+  }
+  if (conditionals) {
+    passes.push({plugins: [conditionalsPlugin]});
+  }
 
-  const finalPresets = [].concat([
-      {
-        plugins: minifyPlugins
-      }
-  ], presets);
+  /**
+   * Append all user passed presets to passes
+   */
+  passes = passes.concat(presets);
+
+  /**
+   * Keep mangler to be in the last of the presets
+   * I don't know why clearly, but mangler seems to disrupt everything, so
+   * I just keep it as the last pass
+   */
+  if (mangle) {
+    passes.push({
+      plugins: [
+        [manglePlugin, {
+          keep_fnames,
+          mangle_globals
+        }]
+      ]
+    });
+  }
 
   // if minify is false, return the plugins list to be used elsewhere
   // maybe move this to a separate file later
@@ -90,8 +123,8 @@ export default function BabelMinify(inputCode, {
     compact: false,
     minified: false,
     passPerPreset: true,
-    presets: finalPresets,
-    plugins
+    presets: passes,
+    plugins: minifyPlugins
   });
 
   return result.code;
