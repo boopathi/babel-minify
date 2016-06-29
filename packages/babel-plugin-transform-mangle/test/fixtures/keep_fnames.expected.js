@@ -5,6 +5,7 @@ function function1() {
         function function5() {
           function function6() {
             function function7() {
+              var a = 'somethingelse';
               something();
             }
           }
@@ -16,8 +17,8 @@ function function1() {
 class Hello {}
 class World extends Hello {}
 
-var a = function hello_world() {};
-var b = {
+var foo = function hello_world() {};
+var bar = {
   foo: function baz() {}
 };
 
@@ -27,4 +28,4 @@ class MyComponent extends React.Component {
   }
 }
 
-let c = class A {}
+let Something = class A {}

@@ -114,7 +114,7 @@ export default function BabelMinify(inputCode, {
 
   // if minify is false, return the plugins list to be used elsewhere
   // maybe move this to a separate file later
-  if (!minify) return { plugins: minifyPlugins };
+  if (!minify) return { plugins: minifyPlugins, presets: passes };
 
   const result = transform(inputCode, {
     babelrc,

@@ -1,2 +1,2 @@
-import a from 'jQuery';
-a('body');
+import $ from 'jQuery';
+$('body');

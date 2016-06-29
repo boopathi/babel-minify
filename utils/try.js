@@ -66,7 +66,7 @@ if (false) var x = 6;
 // });
 
 const output = minify(input, {
-  mangle_globals: true
+  mangle_globals: false
 });
 
 console.log('Input:');

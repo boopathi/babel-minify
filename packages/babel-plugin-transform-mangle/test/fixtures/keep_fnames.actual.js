@@ -5,6 +5,7 @@ function function1() {
         function function5() {
           function function6() {
             function function7() {
+              var longName = 'somethingelse';
               something();
             }
           }

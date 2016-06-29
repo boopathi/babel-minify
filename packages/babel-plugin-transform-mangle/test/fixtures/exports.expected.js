@@ -1,2 +1,1 @@
-const a = 10;
-export {a as blahblah};
+export const blahblah = 10;

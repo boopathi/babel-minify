@@ -13,8 +13,6 @@ function renameIdentifiers(path, {
     mangle_globals = false
   } = {}
 } = {}) {
-  if ((!mangle_globals) && path.scope === path.getFunctionParent().scope) return;
-
   const bindings = path.scope.getAllBindings();
   const ownBindings = Object.keys(bindings).filter(b => path.scope.hasOwnBinding(b));
   const names = nameGenerator();

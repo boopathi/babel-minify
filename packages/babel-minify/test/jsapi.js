@@ -20,7 +20,7 @@ describe('[babel-minify]', function() {
     const optionsPluginsMap = {
       mangle: ['babel-plugin-transform-mangle'],
       dead_code: ['babel-plugin-transform-dead-code-elimination'],
-      conditionals: ['babel-plugin-conditional-compile'],
+      conditionals: ['babel-plugin-transform-conditionals'],
       evaluate: ['babel-plugin-transform-evaluate'],
       drop_debugger: ['babel-plugin-transform-remove-debugger'],
       drop_console: ['babel-plugin-transform-remove-console'],
@@ -39,20 +39,28 @@ describe('[babel-minify]', function() {
       if (plugin.__esModule) return plugin.default;
       return plugin;
     }
+    function getActualPlugins(option, enabled) {
+      const actualPluginsAndPresets = minify(null, {
+        minify: false,
+        [option]: enabled
+      });
+      const plugins = actualPluginsAndPresets.plugins.map(p => flattenPlugin(p));
+
+      actualPluginsAndPresets.presets.forEach(preset => {
+        preset.plugins.map(p => flattenPlugin(p)).forEach(plugin => {
+          plugins.push(plugin);
+        });
+      });
+      return plugins;
+    }
 
     Object.keys(optionsPluginsMap).map(option => {
       it (`should enable/disable corresponding plugins for option = ${option}`, function() {
         const expected = optionsPluginsMap[option].map(name => getPlugin(name));
 
-        const actualEnabled = minify(null, {
-          minify: false,
-          [option]: true
-        }).plugins.map(plugin => flattenPlugin(plugin));
+        const actualEnabled = getActualPlugins(option, true);
 
-        const actualDisabled = minify(null, {
-          minify: false,
-          [option]: false
-        }).plugins.map(plugin => flattenPlugin(plugin));
+        const actualDisabled = getActualPlugins(option, false);
 
         expected.forEach(e => {
           expect(actualEnabled).toInclude(e);
