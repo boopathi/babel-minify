@@ -1,12 +1,12 @@
 {
   "name": "babel-preset-min",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "A Preset containing default optimizations defined in babel-minify",
   "main": "index.js",
   "author": "boopathi",
   "license": "MIT",
   "dependencies": {
-    "babel-minify": "^0.1.5"
+    "babel-minify": "^0.1.6"
   },
   "homepage": "https://github.com/boopathi/babel-minify",
   "repository": "https://github.com/boopathi/babel-minify/tree/master/packages/babel-preset-min"

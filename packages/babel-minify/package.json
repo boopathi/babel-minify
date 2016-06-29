@@ -1,6 +1,6 @@
 {
   "name": "babel-minify",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Babel minify Node API and CLI",
   "main": "lib/index.js",
   "author": "boopathi",
