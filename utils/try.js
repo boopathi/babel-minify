@@ -1,6 +1,7 @@
 /* eslint-disable */
 const plugin = require('../packages/babel-plugin-transform-evaluate');
 const babel = require('babel-core');
+const minify = require('../packages/babel-minify');
 
 let input = `
 function a() {
@@ -59,12 +60,14 @@ if (false) {
 if (false) var x = 6;
 `
 
-const output = babel.transform(input, {
-  babelrc: false,
-  plugins: [plugin]
-});
+// const output = babel.transform(input, {
+//   babelrc: false,
+//   plugins: [plugin]
+// });
+
+const output = minify(input);
 
 console.log('Input:');
 console.log(input);
 console.log('Output:');
-console.log(output.code);
+console.log(output);

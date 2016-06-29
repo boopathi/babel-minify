@@ -3,7 +3,7 @@ import {transform} from 'babel-core';
 // plugins
 import manglePlugin                from 'babel-plugin-transform-mangle';
 import evaluatePlugin              from 'babel-plugin-transform-evaluate';
-import conditionalCompile          from 'babel-plugin-conditional-compile';
+import conditionalsPlugin          from 'babel-plugin-transform-conditionals';
 import removeDebugger              from 'babel-plugin-transform-remove-debugger';
 import removeConsole               from 'babel-plugin-transform-remove-console';
 import deadCodeElimination         from 'babel-plugin-transform-dead-code-elimination';
@@ -61,16 +61,18 @@ export default function BabelMinify(inputCode, {
   booleans      && minifyPlugins.push(minifyBooleans);
   unsafe        && minifyPlugins.push(undefinedToVoid);
   unsafe        && minifyPlugins.push(simplifyComparisonOperators);
+  conditionals  && minifyPlugins.push(conditionalsPlugin);
 
-  if (conditionals) {
-    if (global_defs) {
-      minifyPlugins.push([conditionalCompile, {
-        define: global_defs
-      }]);
-    } else {
-      minifyPlugins.push(conditionalCompile);
+  const firstPass = [];
+  const passes = [];
+
+  minifyPlugins.forEach(plugin => {
+    if (plugin.meta && plugin.meta.separatePass) {
+      passes.push([
+        { plugins: [plugin] }
+      ]);
     }
-  }
+  });
 
   const finalPresets = [].concat([
       {
@@ -85,8 +87,8 @@ export default function BabelMinify(inputCode, {
   const result = transform(inputCode, {
     babelrc,
     comments: false,
-    compact: true,
-    minified: true,
+    compact: false,
+    minified: false,
     passPerPreset: true,
     presets: finalPresets,
     plugins

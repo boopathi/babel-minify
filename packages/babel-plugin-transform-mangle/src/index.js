@@ -9,9 +9,12 @@ function isFunction(binding) {
 
 function renameIdentifiers(path, {
   opts: {
-    keep_fnames = false
+    keep_fnames = false,
+    mangle_globals = false
   } = {}
 } = {}) {
+  if ((!mangle_globals) && path.scope === path.getFunctionParent().scope) return;
+
   const bindings = path.scope.getAllBindings();
   const ownBindings = Object.keys(bindings).filter(b => path.scope.hasOwnBinding(b));
   const names = nameGenerator();
@@ -28,10 +31,13 @@ function renameIdentifiers(path, {
   });
 }
 
-export default function BabelPluginShortIdentifiers() {
+export default function Mangle() {
   return {
     visitor: {
-      Program: renameIdentifiers,
+      Program(path, options) {
+        if (options.opts && options.opts.mangle_globals)
+          renameIdentifiers(path, options);
+      },
       BlockStatement: renameIdentifiers
     }
   };

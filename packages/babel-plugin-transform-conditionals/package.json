@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-transform-conditionals",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Optimize conditional statements",
   "main": "lib/index.js",
   "author": "boopathi",
