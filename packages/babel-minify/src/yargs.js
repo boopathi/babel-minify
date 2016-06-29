@@ -90,7 +90,7 @@ export default function yargsOptions(argv) {
       describe: '[default true] preserve function names prevent mangling function names'
     })
 
-    .option('passes', {
+    .option('npasses', {
       type: 'number',
       alias: 'p',
       'default': 1,

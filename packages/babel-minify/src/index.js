@@ -35,7 +35,7 @@ export default function BabelMinify(inputCode, {
   keep_fnames    = false,
 
   // number of passes
-  passes        = 1,
+  npasses        = 1,
 
   // passed on to babel transform to tell whether to use babelrc
   babelrc        = false,
@@ -121,7 +121,7 @@ export default function BabelMinify(inputCode, {
 
   let result = {code: inputCode};
 
-  while (passes-- > 0) {
+  while (npasses-- > 0) {
     result = transform(result.code, {
       babelrc,
       comments: false,
