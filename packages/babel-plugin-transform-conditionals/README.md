@@ -1,19 +1,25 @@
 # babel-plugin-transform-conditionals
 
-In:
+Transform conditional expressions and remove dead code.
 
-```js
-if (true && false && true && true) {
-  something();
-} else {
-  whatever();
-}
-
+## Install
 
 ```
+npm install babel-plugin-transform-conditionals
+```
 
-Out:
+**In**
 
 ```js
-whatever()
+if (false) {
+  doSomething();
+} else {
+  doSomethingElse();
+}
+```
+
+**Out**
+
+```js
+doSomethingElse()
 ```

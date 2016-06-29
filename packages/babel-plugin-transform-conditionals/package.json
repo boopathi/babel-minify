@@ -4,5 +4,10 @@
   "description": "Optimize conditional statements",
   "main": "lib/index.js",
   "author": "boopathi",
-  "license": "MIT"
+  "license": "MIT",
+  "homepage": "https://github.com/boopathi/babel-minify",
+  "repository": "https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-conditionals",
+  "browserify": {
+    "transform": [["babelify", { "presets": ["es2015"] }]]
+  }
 }
