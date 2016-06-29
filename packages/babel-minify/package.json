@@ -9,7 +9,7 @@
     "babel-minify": "lib/cli.js"
   },
   "dependencies": {
-    "babel-core": "^6.9.1",
+    "babel-core": "^6.10.4",
     "babel-plugin-transform-conditionals": "^0.0.1",
     "babel-plugin-transform-dead-code-elimination": "^2.0.1",
     "babel-plugin-transform-evaluate": "^0.1.3",
