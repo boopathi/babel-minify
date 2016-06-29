@@ -9,8 +9,7 @@ function isFunction(binding) {
 
 function renameIdentifiers(path, {
   opts: {
-    keep_fnames = false,
-    mangle_globals = false
+    keep_fnames = false
   } = {}
 } = {}) {
   const bindings = path.scope.getAllBindings();
