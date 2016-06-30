@@ -7,7 +7,7 @@
     "clean": "gulp clean",
     "lint": "eslint .",
     "watch": "npm run clean && gulp watch",
-    "test": "mocha --compilers js:babel-core/register packages/*/test/*.js"
+    "test": "mocha --opts utils/mocha.opts --grep ${TEST_GREP-babel}"
   },
   "devDependencies": {
     "babel-core": "^6.10.4",

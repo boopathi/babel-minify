@@ -42,23 +42,19 @@ function a() {
 `;
 
 input = `
-if (false) {
-  let x = 5;
-  var a = 1;
-  {
-    var z = 6;
-    var a = 5;
-  }
-  function a() {
-    var a = 1;
-  }
-} else {
-  var x = 4, y = 5, {a: x} = {}, [{b: h = 5}, ...c] = something;
-  let n = 5;
-}
 
-if (false) var x = 6;
+  var longName = 1;
+  let something = longName;
+  const zero = something - 1;
+  {
+    let something = longName;
+    const zero = something - 1;
+    something1 = something;
+  }
+  console.log(longName, something, zero);
 `
+
+// input = `{ var a; let b; }`
 
 // const output = babel.transform(input, {
 //   babelrc: false,
