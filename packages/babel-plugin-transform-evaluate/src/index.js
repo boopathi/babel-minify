@@ -5,7 +5,8 @@ export default function Evaluate({types: t}) {
         exit(path) {
           function isDeopt(id) {
             if (!id.isIdentifier()) return false;
-            return path.scope.getBinding(id.node.name).hasDeoptedValue;
+            const binding = path.scope.getBinding(id.node.name);
+            return !binding || binding.hasDeoptedValue;
           }
 
           if (isDeopt(path.get('left'))) return;
@@ -52,7 +53,8 @@ export default function Evaluate({types: t}) {
           path.get('declarations').forEach(decl => {
             const init = decl.get('init');
             if (init && init.isIdentifier()) {
-              if (path.scope.getBinding(init.node.name).hasDeoptedValue) return;
+              const binding = path.scope.getBinding(init.node.name);
+              if (!binding || binding.hasDeoptedValue) return;
               const evaluated = init.evaluate();
               if (evaluated.confident) {
                 init.replaceWith(t.valueToNode(evaluated.value));
