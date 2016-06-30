@@ -6,7 +6,9 @@
     "bootstrap": "lerna bootstrap",
     "build": "npm run clean && gulp build",
     "clean": "gulp clean",
-    "lint": "eslint .",
+    "lint": "npm run lint-src && npm run lint-test",
+    "lint-src": "eslint -c .eslintrc packages/*/src packages/*/*.js",
+    "lint-test": "eslint -c utils/test.eslintrc packages/*/test --ignore-pattern '**/packages/*/test/fixtures/**'",
     "gh-pages": "gulp gh-pages",
     "watch": "npm run clean && gulp watch",
     "test": "mocha --opts utils/mocha.opts --grep ${TEST_GREP-babel}"

@@ -1,7 +1,6 @@
-import expect from 'expect';
 import nameGenerator from '../src/namegen';
 
-describe('[babel-plugin-transform-mangle] - Name Generator', function() {
+describe('babel-plugin-transform-mangle', function() {
   it('should work for a small sample of 200', function() {
     const gen = nameGenerator();
     let i = 0, limit = 250;

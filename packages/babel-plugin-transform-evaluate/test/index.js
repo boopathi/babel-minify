@@ -1,15 +1,11 @@
-import expect from 'expect';
-import {transform} from 'babel-core';
 import evaluate from '../src';
-
-import {trim} from '../../../utils';
 
 const babelOpts = {
   babelrc: false,
   plugins: [evaluate]
 };
 
-describe('[babel-plugin-transform-evaluate]', function() {
+describe('babel-plugin-transform-evaluate', function() {
   it('should transform binary expressions', function() {
     const actual = transform(`
       var x = 1+2+3+4%5;

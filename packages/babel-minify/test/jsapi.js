@@ -1,7 +1,6 @@
-import expect from 'expect';
 import minify from '../';
 
-describe('[babel-minify]', function() {
+describe('babel-minify', function() {
   it('should throw when input is null', function() {
     const inputs = [null, false, void 0];
     inputs.forEach(input => {

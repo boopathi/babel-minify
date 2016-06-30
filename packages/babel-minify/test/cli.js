@@ -1,4 +1,3 @@
-import expect from 'expect';
 import path from 'path';
 import {spawnSync} from 'child_process';
 
@@ -13,7 +12,7 @@ function exec(...args) {
   return String(p.output);
 }
 
-describe('[babel-minify] CLI', function() {
+describe('babel-minify-cli', function() {
   it('should throw when no file is passed', function() {
     expect(() => exec()).toThrow();
   });

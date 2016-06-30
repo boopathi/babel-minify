@@ -1,0 +1,21 @@
+{
+  "env": {
+    "node": true,
+    "mocha": true
+  },
+  globals: {
+    "expect": true,
+    "transform": true,
+    "trim": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "extends": "eslint:recommended",
+  "rules": {
+    "comma-dangle": 0,
+    "no-warning-comments": 1,
+    "no-unused-vars": 2,
+  }
+}

@@ -1,10 +1,6 @@
-import expect from 'expect';
 import fs from 'fs';
 import path from 'path';
-import {transform} from 'babel-core';
 import mangle from '../src';
-
-import {trim} from '../../../utils';
 
 const babelOpts = {
   plugins: [mangle],
@@ -25,7 +21,7 @@ function getTestData(filename, babelOpts) {
   };
 }
 
-describe('[babel-plugin-transform-mangle] - mangle', function() {
+describe('babel-plugin-transform-mangle', function() {
   it('should mangle imports', function() {
     const {actualT, expectedT} = getTestData('imports', babelOpts);
     expect(actualT).toEqual(expectedT);
