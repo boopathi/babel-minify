@@ -21,7 +21,7 @@ function renameIdentifiers(path, {
     return !isFunction(path.scope.getBinding(b));
   }).map(b => {
     let next = names.next().value;
-    while (path.scope.hasBinding(next)) {
+    while (path.scope.hasBinding(next) || path.scope.hasGlobal(next) || path.scope.hasReference(next)) {
       next = names.next().value;
     }
     path.scope.rename(b, next);

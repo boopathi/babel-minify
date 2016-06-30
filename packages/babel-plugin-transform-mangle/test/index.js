@@ -8,7 +8,8 @@ import {trim} from '../../../utils';
 
 const babelOpts = {
   plugins: [mangle],
-  babelrc: false
+  babelrc: false,
+  comments: false
 };
 
 function getTestData(filename, babelOpts) {
@@ -69,6 +70,16 @@ describe('[babel-plugin-transform-mangle] - mangle', function() {
       babelrc: false
     };
     const {actualT, expectedT} = getTestData('mangle_globals', babelOpts);
+    expect(actualT).toEqual(expectedT);
+  });
+
+  it('should take care or vars in blocks', function() {
+    const {actualT, expectedT} = getTestData('vars_in_blocks', babelOpts);
+    expect(actualT).toEqual(expectedT);
+  });
+
+  it('should take care global vars and should not declare global in local scope', function() {
+    const {actualT, expectedT} = getTestData('global_vars', babelOpts);
     expect(actualT).toEqual(expectedT);
   });
 });

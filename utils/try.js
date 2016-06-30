@@ -42,16 +42,11 @@ function a() {
 `;
 
 input = `
-
-  var longName = 1;
-  let something = longName;
-  const zero = something - 1;
-  {
-    let something = longName;
-    const zero = something - 1;
-    something1 = something;
-  }
-  console.log(longName, something, zero);
+{
+  var x = 5;
+  function a() {}
+}
+var x = 6;
 `
 
 // input = `{ var a; let b; }`
@@ -61,7 +56,9 @@ input = `
 //   plugins: [plugin]
 // });
 
-const output = minify(input);
+const output = minify(input, {
+  mangle_globals: true
+});
 
 console.log('Input:');
 console.log(input);
