@@ -1,0 +1,10 @@
+[ignore]
+
+[include]
+./packages/*/src/*.js
+./packages/*/*.js
+
+[libs]
+declarations
+
+[options]

@@ -24,6 +24,7 @@
     "browserify": "^13.0.1",
     "eslint": "^2.13.1",
     "expect": "^1.20.1",
+    "flow-bin": "^0.27.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-copy": "0.0.2",

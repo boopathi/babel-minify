@@ -1,3 +1,4 @@
+// @flow
 import nameGenerator from './namegen';
 
 /**
@@ -10,29 +11,29 @@ import nameGenerator from './namegen';
  * Methods are anyway not renamed as they are object properties
  *
  */
-function isFunction(binding) {
+function isFunction(binding /* :Binding */) /*:boolean*/ {
   return binding.path.isFunctionExpression() ||
     binding.path.isFunctionDeclaration() ||
     binding.path.isClassDeclaration() ||
     binding.path.isClassExpression();
 }
 
-function renameIdentifiers(path, {
+function renameIdentifiers(path /* :NodePath */, {
   opts: {
     keep_fnames = false,
     mangle_globals = false
   } = {}
-} = {}) {
-  const bindings = path.scope.getAllBindings();
-  const ownBindings = Object.keys(bindings).filter(b => path.scope.hasOwnBinding(b));
+} /*:MinifierOptions*/ = {}) {
+  const bindings /* :Object */ = path.scope.getAllBindings();
+  const ownBindings /* :string[] */ = Object.keys(bindings).filter(b => path.scope.hasOwnBinding(b));
   const names = nameGenerator();
 
   ownBindings.filter(b => {
-    const binding = path.scope.getBinding(b);
+    const binding /* :Binding */ = path.scope.getBinding(b);
 
     if (!mangle_globals) {
-      const functionParent = binding.scope.getFunctionParent();
-      const programParent = binding.scope.getProgramParent();
+      const functionParent /* :Scope */ = binding.scope.getFunctionParent();
+      const programParent /* :Scope */ = binding.scope.getProgramParent();
 
       /**
        * Function declarations inside Program -> Block are hoisted within the
@@ -57,18 +58,26 @@ function renameIdentifiers(path, {
      * Iterate through the possible names one by one until we
      * find a suitable binding that doesn't conflict with existing ones
      */
-    let next = names.next().value;
+    let _next = names.next();
+    if (_next.done) throw new Error('Name generator stopped');
+
+    let next /*:string*/ = _next.value;
     while (path.scope.hasBinding(next) || path.scope.hasGlobal(next) || path.scope.hasReference(next)) {
-      next = names.next().value;
+      _next = names.next();
+      if (_next.done) throw new Error('Name generator stopped');
+      next = _next.value;
     }
     path.scope.rename(b, next);
   });
 }
 
+/**
+ * Mangle Plugin
+ */
 export default function Mangle() {
   return {
     visitor: {
-      Program(path, options) {
+      Program(path /*:any*/, options /*:MinifierOptions*/) {
         if (options.opts && options.opts.mangle_globals)
           renameIdentifiers(path, options);
       },
