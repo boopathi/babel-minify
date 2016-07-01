@@ -42,11 +42,11 @@ function a() {
 `;
 
 input = `
+var x = 5;
+let [y] = [0, x];
 {
-  var x = 5;
-  function a() {}
+  x = 6;
 }
-var x = 6;
 `
 
 // input = `{ var a; let b; }`

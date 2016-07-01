@@ -40,4 +40,10 @@ describe('babel-plugin-transform-evaluate', function() {
     const expected = `(1,eval)('x=4')`;
     expect(trim(actual)).toEqual(trim(expected));
   });
+
+  it('should not fail to deopt for object and array pattern', function() {
+    const actual = transform('var x = 5; var [y] = [x]; { x = 6 }', babelOpts).code;
+    const expected = 'var x = 5; var [y] = [x]; { x = 6 }';
+    expect(trim(actual)).toEqual(trim(expected));
+  });
 });

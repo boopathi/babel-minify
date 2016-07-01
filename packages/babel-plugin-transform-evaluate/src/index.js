@@ -28,20 +28,27 @@ export default function Evaluate({types: t}) {
         enter(path) {
           path.get('declarations').forEach(decl => {
             const init = decl.get('init');
-            const id = decl.get('id');
-            const idBinding = path.scope.getBinding(id.node.name);
+            const idBindings = decl.getBindingIdentifiers();
+
+            function deopt () {
+              Object.keys(idBindings).forEach(id => {
+                const binding = path.scope.getBinding(id);
+                binding.deoptValue();
+              });
+            }
+
             if (init) {
               if (init.isIdentifier()) {
                 const binding = path.scope.getBinding(init.node.name);
                 if (!binding || binding.hasDeoptedValue) {
-                  idBinding.deoptValue();
+                  deopt()
                 }
               } else {
                 init.traverse({
                   Identifier(idPath) {
                     const binding = path.scope.getBinding(idPath.node.name);
                     if (!binding || binding.hasDeoptedValue) {
-                      idBinding.deoptValue();
+                      deopt();
                     }
                   }
                 });
