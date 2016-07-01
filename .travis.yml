@@ -10,11 +10,7 @@ install:
   - $(npm bin)/lerna bootstrap
 env:
   - SCRIPT=flow
-  - SCRIPT=lint-src
-  - SCRIPT=lint-test
-  - SCRIPT=lint-others
-  - SCRIPT=test
-before-script:
-  - npm run build
+  - SCRIPT=lint
+  - SCRIPT=build-test
 script:
   - npm run $SCRIPT
