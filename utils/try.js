@@ -42,10 +42,15 @@ function a() {
 `;
 
 input = `
-var x = 5;
-let [y] = [0, x];
-{
-  x = 6;
+function a() {
+  var x = 5;
+  let [y] = [0, x];
+  {
+    var z = 5;
+    let r = 1;
+    function asdf () {}
+  }
+  asdf();
 }
 `
 
@@ -57,7 +62,7 @@ let [y] = [0, x];
 // });
 
 const output = minify(input, {
-  mangle_globals: true
+  mangle_globals: false
 });
 
 console.log('Input:');

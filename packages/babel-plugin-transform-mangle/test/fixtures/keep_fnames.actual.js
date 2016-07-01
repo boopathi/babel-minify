@@ -19,7 +19,8 @@ class World extends Hello {}
 
 var foo = function hello_world() {};
 var bar = {
-  foo: function baz() {}
+  foo: function baz() {},
+  foo1() {}
 };
 
 class MyComponent extends React.Component {
