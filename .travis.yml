@@ -8,9 +8,13 @@ cache:
 install:
   - npm install
   - $(npm bin)/lerna bootstrap
-before_script:
-  - npm run lint
-  - npm run flow
+env:
+  - SCRIPT=flow
+  - SCRIPT=lint-src
+  - SCRIPT=lint-test
+  - SCRIPT=lint-others
+  - SCRIPT=test
+before-script:
   - npm run build
 script:
-  - npm run test
+  - npm run $SCRIPT
