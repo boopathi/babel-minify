@@ -18,10 +18,12 @@ declare type MinifierOptions = {
   minify: bool,
 }
 
-declare type MinifierResult = string | {
+declare type MinifierResult = {
   plugins: Plugin[],
-  presets: Preset[],
+  presets: Preset[]
 }
+
+declare type MinifierOutput = string | MinifierResult
 
 declare type ManglerOptions = {
   opts: {

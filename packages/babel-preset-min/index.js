@@ -1,6 +1,7 @@
-const pluginsAndPresets = require('babel-minify')(null, { minify: false });
+// @flow
+const pluginsAndPresets /*:MinifierResult*/ = require('babel-minify')(null, { minify: false });
 
-let plugins = [...pluginsAndPresets.plugins];
+let plugins = [].concat(pluginsAndPresets.plugins);
 
 pluginsAndPresets.presets.forEach(preset => {
   plugins = [...plugins, ...preset.plugins];

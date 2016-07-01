@@ -1,7 +1,8 @@
-export default function Conditionals({types: t}) {
+// @flow
+export default function Conditionals({types: t} /*:PluginOptions*/) {
   return {
     visitor: {
-      Conditional(path) {
+      Conditional(path /* :NodePath */) {
         const evaluated = path.get('test').evaluate();
         if (!evaluated.confident) {
           return path.skip();
@@ -12,12 +13,13 @@ export default function Conditionals({types: t}) {
           replaceWith('alternate');
         }
 
-        function getVars(blockPath) {
+        function getVars(blockPath /*:NodePath*/) /*:Node*/ {
           const declarations = [];
           if (blockPath.isBlockStatement()) {
             blockPath.traverse({
               VariableDeclaration(varPath) {
-                if (varPath.isVariableDeclaration({ kind:'var' }) && varPath.getFunctionParent() === blockPath.getFunctionParent()) {
+                if (varPath.isVariableDeclaration({ kind:'var' })
+                  && varPath.scope.getFunctionParent() === blockPath.scope.getFunctionParent()) {
                   declarations.push(varPath);
                 }
               },
@@ -32,7 +34,7 @@ export default function Conditionals({types: t}) {
         }
 
         // needs a better function name
-        function dontForgetAlternate(blockPath) {
+        function dontForgetAlternate(blockPath /*:NodePath*/) /*:Node*/ {
           const declarators = [];
 
           if (blockPath.node === null) return null;
@@ -61,12 +63,12 @@ export default function Conditionals({types: t}) {
           return t.variableDeclaration('var', declarators);
         }
 
-        function replaceWith(to) {
+        function replaceWith(to /*:string*/) {
           const remove = to === 'consequent' ? 'alternate' : 'consequent';
-          const replacements = [];
+          const replacements /*:Node[]*/ = [];
 
-          const toBlock = path.get(to);
-          const removeBlock = path.get(remove);
+          const toBlock /*:NodePath*/ = path.get(to);
+          const removeBlock /*:NodePath*/ = path.get(remove);
 
           if (toBlock.isBlockStatement()) {
             if (Object.keys(toBlock.scope.bindings).length > 0) {

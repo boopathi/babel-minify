@@ -1,8 +1,9 @@
-export default function Evaluate({types: t}) {
+// @flow
+export default function Evaluate({types: t} /*:PluginOptions*/) {
   return {
     visitor: {
       'BinaryExpression|LogicalExpression': {
-        exit(path) {
+        exit(path /*:NodePath*/) {
           function isDeopt(id) {
             if (!id.isIdentifier()) return false;
             const binding = path.scope.getBinding(id.node.name);
@@ -18,14 +19,14 @@ export default function Evaluate({types: t}) {
       },
 
       CallExpression: {
-        exit(path) {
+        exit(path /*:NodePath*/) {
           const evaluated = path.evaluate();
           if (evaluated.confident) path.replaceWith(t.valueToNode(evaluated.value));
         }
       },
 
       VariableDeclaration: {
-        enter(path) {
+        enter(path /*:NodePath*/) {
           path.get('declarations').forEach(decl => {
             const init = decl.get('init');
             const idBindings = decl.getBindingIdentifiers();
@@ -56,7 +57,7 @@ export default function Evaluate({types: t}) {
             }
           });
         },
-        exit(path) {
+        exit(path /*:NodePath*/) {
           path.get('declarations').forEach(decl => {
             const init = decl.get('init');
             if (init && init.isIdentifier()) {
@@ -71,7 +72,7 @@ export default function Evaluate({types: t}) {
         }
       },
 
-      AssignmentExpression(path) {
+      AssignmentExpression(path /*:NodePath*/) {
         const left = path.get('left');
         if (!left.isIdentifier()) return;
 
@@ -87,7 +88,7 @@ export default function Evaluate({types: t}) {
       },
 
       Scopable: {
-        enter(path) {
+        enter(path /*:NodePath*/) {
           for (let name in path.scope.bindings) {
             const binding = path.scope.bindings[name];
 
@@ -96,7 +97,7 @@ export default function Evaluate({types: t}) {
             }
           }
         },
-        exit(path) {
+        exit(path /*:NodePath*/) {
           for (let name in path.scope.bindings) {
             const binding = path.scope.bindings[name];
             binding.clearValue();

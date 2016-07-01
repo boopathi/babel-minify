@@ -48,7 +48,7 @@ export default function BabelMinify(inputCode /*:string*/, {
 
   // if false, babel-minify can give a list of plugins to use as a preset
   minify         = true,
-} /*:MinifierOptions*/ = {}) /*:MinifierResult*/ {
+} /*:MinifierOptions*/ = {}) /*:MinifierOutput*/ {
 
   if (typeof inputCode !== 'string' && minify) throw new Error('Invalid Input');
 
