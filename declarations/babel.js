@@ -1,3 +1,9 @@
+declare var Plugin: any
+
+declare type Preset = {
+  plugins: Plugin[]
+}
+
 declare class Binding {
   scope: Scope,
   path: NodePath,

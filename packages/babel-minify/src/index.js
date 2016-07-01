@@ -1,3 +1,4 @@
+// @flow
 import {transform} from 'babel-core';
 
 // plugins
@@ -18,7 +19,7 @@ import undefinedToVoid             from 'babel-plugin-transform-undefined-to-voi
  * The main function of the minifier
  * @function
  */
-export default function BabelMinify(inputCode, {
+export default function BabelMinify(inputCode /*:string*/, {
   mangle         = true,
   mangle_globals = false,
 
@@ -47,7 +48,7 @@ export default function BabelMinify(inputCode, {
 
   // if false, babel-minify can give a list of plugins to use as a preset
   minify         = true,
-} = {}) {
+} /*:MinifierOptions*/ = {}) /*:MinifierResult*/ {
 
   if (typeof inputCode !== 'string' && minify) throw new Error('Invalid Input');
 
@@ -55,16 +56,14 @@ export default function BabelMinify(inputCode, {
    * The final list of plugins that are applied in babel transform
    * This is the first list that's preffered in babel transform, the plugins
    * that go into this take one pass, plugins that prefer separate passes go into
-   * the {finalPresets}
-   * @type {Array}
+   * the finalPresets / passes
    */
-  let minifyPlugins = [];
+  let minifyPlugins /*:Plugin[]*/ = [];
 
   /**
    * The final list of presets that are applied in SEPARATE passes
-   * @type {Array}
    */
-  let passes = [];
+  let passes /*:Preset[]*/ = [];
 
   evaluate      && minifyPlugins.push(evaluatePlugin);
   drop_debugger && minifyPlugins.push(removeDebugger);

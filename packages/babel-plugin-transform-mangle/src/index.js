@@ -23,7 +23,7 @@ function renameIdentifiers(path /* :NodePath */, {
     keep_fnames = false,
     mangle_globals = false
   } = {}
-} /*:MinifierOptions*/ = {}) {
+} /*:ManglerOptions*/ = {}) {
   const bindings /* :Object */ = path.scope.getAllBindings();
   const ownBindings /* :string[] */ = Object.keys(bindings).filter(b => path.scope.hasOwnBinding(b));
   const names = nameGenerator();
@@ -77,7 +77,7 @@ function renameIdentifiers(path /* :NodePath */, {
 export default function Mangle() {
   return {
     visitor: {
-      Program(path /*:any*/, options /*:MinifierOptions*/) {
+      Program(path /*:any*/, options /*:ManglerOptions*/) {
         if (options.opts && options.opts.mangle_globals)
           renameIdentifiers(path, options);
       },
