@@ -13,56 +13,6 @@ export default function Conditionals({types: t} /*:PluginOptions*/) {
           replaceWith('alternate');
         }
 
-        function getVars(blockPath /*:NodePath*/) /*:Node*/ {
-          const declarations = [];
-          if (blockPath.isBlockStatement()) {
-            blockPath.traverse({
-              VariableDeclaration(varPath) {
-                if (varPath.isVariableDeclaration({ kind:'var' })
-                  && varPath.scope.getFunctionParent() === blockPath.scope.getFunctionParent()) {
-                  declarations.push(varPath);
-                }
-              },
-              FunctionDeclaration(varPath) {
-                declarations.push(varPath);
-              }
-            });
-          } else if (blockPath.isVariableDeclaration({ kind: 'var' })) {
-            declarations.push(blockPath);
-          }
-          return declarations;
-        }
-
-        // needs a better function name
-        function dontForgetAlternate(blockPath /*:NodePath*/) /*:Node*/ {
-          const declarators = [];
-
-          if (blockPath.node === null) return null;
-
-          /**
-           * TODO:
-           * Warn about constantViolations
-           */
-
-          getVars(blockPath).forEach(decl => {
-            const bindingIdentifiers = decl.getBindingIdentifiers();
-            Object.keys(bindingIdentifiers).forEach(id => {
-              let alreadyFound = false;
-              declarators.forEach(dl => {
-                if (dl.id.name === id) {
-                  alreadyFound = true;
-                }
-              });
-              if (!alreadyFound) {
-                declarators.push(t.variableDeclarator(bindingIdentifiers[id]));
-              }
-            });
-          });
-
-          if (declarators.length <= 0) return null;
-          return t.variableDeclaration('var', declarators);
-        }
-
         function replaceWith(to /*:string*/) {
           const remove = to === 'consequent' ? 'alternate' : 'consequent';
           const replacements /*:Node[]*/ = [];
@@ -80,7 +30,7 @@ export default function Conditionals({types: t} /*:PluginOptions*/) {
             replacements.push(toBlock.node);
           }
 
-          const decl = dontForgetAlternate(removeBlock);
+          const decl = dontForgetAlternate(removeBlock, t);
           if (decl) {
             if (to === 'alternate') {
               replacements.unshift(decl);
@@ -94,4 +44,51 @@ export default function Conditionals({types: t} /*:PluginOptions*/) {
       }
     }
   };
+}
+
+function getVars(blockPath /*:NodePath*/) /*:Node*/ {
+  const declarations = [];
+  if (blockPath.isBlockStatement()) {
+    blockPath.traverse({
+      VariableDeclaration(varPath) {
+        if (varPath.isVariableDeclaration({ kind:'var' })
+          && varPath.scope.getFunctionParent() === blockPath.scope.getFunctionParent()) {
+          declarations.push(varPath);
+        }
+      }
+    });
+  } else if (blockPath.isVariableDeclaration({ kind: 'var' })) {
+    declarations.push(blockPath);
+  }
+  return declarations;
+}
+
+// needs a better function name
+function dontForgetAlternate(blockPath /*:NodePath*/, t /*:Object*/) /*:Node*/ {
+  const declarators = [];
+
+  if (blockPath.node === null) return null;
+
+  /**
+   * TODO:
+   * Warn about constantViolations
+   */
+
+  getVars(blockPath).forEach(decl => {
+    const bindingIdentifiers = decl.getBindingIdentifiers();
+    Object.keys(bindingIdentifiers).forEach(id => {
+      let alreadyFound = false;
+      declarators.forEach(dl => {
+        if (dl.id.name === id) {
+          alreadyFound = true;
+        }
+      });
+      if (!alreadyFound) {
+        declarators.push(t.variableDeclarator(bindingIdentifiers[id]));
+      }
+    });
+  });
+
+  if (declarators.length <= 0) return null;
+  return t.variableDeclaration('var', declarators);
 }

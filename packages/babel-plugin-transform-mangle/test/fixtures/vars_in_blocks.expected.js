@@ -1,7 +1,7 @@
 (function() {
   {
-    var b = 1;
-    function c() {}
+    var x = 1;
+    function a() {}
   }
-  var b = 2;
-})()
+  var x = 2;
+})();

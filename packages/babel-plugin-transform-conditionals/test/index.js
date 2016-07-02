@@ -68,4 +68,11 @@ describe('babel-plugin-transform-conditionals', function () {
     );
   });
 
+  it('should treat functions within block as strict mode Issue#14', function () {
+    expect(
+      test('if(false) {function a() {}} a();')
+    ).toEqual(
+      trim('a()')
+    );
+  });
 });
