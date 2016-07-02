@@ -1,4 +1,5 @@
 // @flow
+/*::import type {NodePath, Binding, Scope, Node, PluginOptions} from 'Babel';*/
 export default function Conditionals({types: t} /*:PluginOptions*/) {
   return {
     visitor: {
@@ -46,7 +47,7 @@ export default function Conditionals({types: t} /*:PluginOptions*/) {
   };
 }
 
-function getVars(blockPath /*:NodePath*/) /*:Node*/ {
+function getVars(blockPath /*:NodePath*/) /*:NodePath[]*/ {
   const declarations = [];
   if (blockPath.isBlockStatement()) {
     blockPath.traverse({
@@ -64,7 +65,7 @@ function getVars(blockPath /*:NodePath*/) /*:Node*/ {
 }
 
 // needs a better function name
-function dontForgetAlternate(blockPath /*:NodePath*/, t /*:Object*/) /*:Node*/ {
+function dontForgetAlternate(blockPath /*:NodePath*/, t /*:Object*/) /*:Node|null*/ {
   const declarators = [];
 
   if (blockPath.node === null) return null;

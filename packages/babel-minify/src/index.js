@@ -1,4 +1,5 @@
 // @flow
+/*::import type {Plugin, Preset} from 'Babel';*/
 import {transform} from 'babel-core';
 
 // plugins

@@ -1,3 +1,5 @@
+import type {Plugin, Preset} from 'Babel';
+
 declare type MinifierOptions = {
   mangle: bool,
   mangle_globals: bool,

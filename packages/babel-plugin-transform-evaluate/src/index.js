@@ -1,4 +1,5 @@
 // @flow
+/*::import type {NodePath, Binding, Scope, Node, PluginOptions} from 'Babel';*/
 export default function Evaluate({types: t} /*:PluginOptions*/) {
   return {
     visitor: {

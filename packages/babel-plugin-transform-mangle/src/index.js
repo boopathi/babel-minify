@@ -1,4 +1,5 @@
 // @flow
+/*::import type {NodePath, Binding, Scope, Node, PluginOptions} from 'Babel';*/
 import nameGenerator from './namegen';
 
 /**
