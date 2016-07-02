@@ -7,10 +7,10 @@ cache:
     - node_modules
 install:
   - npm install
-  - $(npm bin)/lerna bootstrap
-env:
-  - SCRIPT=flow
-  - SCRIPT=lint
-  - SCRIPT=build-test
+  - npm run bootstrap
+before-script:
+  - npm run build
+  - npm run lint
+  - npm run flow
 script:
-  - npm run $SCRIPT
+  - npm run test

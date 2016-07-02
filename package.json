@@ -5,7 +5,6 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "npm run clean && gulp build",
-    "build-test": "npm run build && npm run test",
     "clean": "gulp clean",
     "flow": "flow check",
     "lint": "npm run lint-src && npm run lint-test && npm run lint-others",
