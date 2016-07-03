@@ -8,23 +8,23 @@
 
 const lerna = require('lerna');
 const npm = require('lerna/lib/NpmUtilities');
-const git = require('lerna/lib/GitUtilities');
+// const git = require('lerna/lib/GitUtilities');
 
-function runVersion(cb) {
-  const PublishCommand = lerna.__commands__.publish;
-  const flags = {
-    skipNpm: true,
-    skipGit: true,
-  };
-  const publish = new PublishCommand([], flags);
-  publish.runValidations();
-  publish.runPreparations();
-  publish._attempt('initialize', () => {
-    publish._attempt('execute', () => {
-      cb();
-    });
-  });
-}
+// function runVersion(cb) {
+//   const PublishCommand = lerna.__commands__.publish;
+//   const flags = {
+//     skipNpm: true,
+//     skipGit: true,
+//   };
+//   const publish = new PublishCommand([], flags);
+//   publish.runValidations();
+//   publish.runPreparations();
+//   publish._attempt('initialize', () => {
+//     publish._attempt('execute', () => {
+//       cb();
+//     });
+//   });
+// }
 
 function runPublish(cb) {
   const PublishCommand = lerna.__commands__.publish;
@@ -38,10 +38,6 @@ function runPublish(cb) {
 
   publish.initialize(function (err) {
     if (err) throw err;
-
-    let published = 0;
-    let errors = [];
-    let output = [];
 
     publish.updateUpdatedPackages();
 
