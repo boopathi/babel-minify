@@ -1,4 +1,5 @@
 import type {Plugin, Preset} from 'Babel';
+import type {Argv} from 'yargs';
 
 declare type MinifierOptions = {
   mangle: bool,
@@ -33,3 +34,22 @@ declare type ManglerOptions = {
     mangle_globals: boolean
   }
 }
+
+declare type MinifierCliRunOptions = {
+  logger: {
+    error: Function,
+    log: Function,
+    warn: Function,
+  }
+}
+
+type _MinifierArgv = {
+  results: {
+    contents: string,
+    filename: string,
+  },
+  output: string,
+  outputDir: string,
+}
+
+declare type MinifierArgv = Argv & _MinifierArgv

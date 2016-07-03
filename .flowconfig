@@ -6,5 +6,6 @@
 
 [libs]
 declarations
+flow-typed
 
 [options]

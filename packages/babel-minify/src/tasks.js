@@ -1,8 +1,14 @@
+// @flow
 import fs from 'fs';
 import path from 'path';
 import minify from '../';
 
-export function getFilesAndMinify(argv, opts) {
+/*::declare type ArgvResults = {
+  contents: string,
+  filename: string
+}*/
+
+export function getFilesAndMinify(argv /*:MinifierArgv*/, opts /*:MinifierCliRunOptions*/) {
   argv.results = argv._
     .map(fileOrDir => {
       if (fs.statSync(fileOrDir).isDirectory()) {
@@ -21,7 +27,7 @@ export function getFilesAndMinify(argv, opts) {
     }));
 }
 
-export function putFiles(argv, opts) {
+export function putFiles(argv /*:MinifierArgv*/, opts /*:MinifierCliRunOptions*/) {
   argv.results
     .forEach(({contents, filename}) => {
       if (argv._.length === 1) {
@@ -41,7 +47,7 @@ export function putFiles(argv, opts) {
     });
 }
 
-export function runTasks(argv, opts) {
+export function runTasks(argv /*:MinifierArgv*/, opts /*:MinifierCliRunOptions*/) {
   const tasks = [
     getFilesAndMinify,
     putFiles
