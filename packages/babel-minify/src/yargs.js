@@ -21,6 +21,9 @@ export default function yargsOptions(argv) {
       describe: 'Output Directory'
     })
 
+    /**
+     * Minifier Options
+     */
     .option('mangle', {
       alias: 'm',
       type: 'boolean',
@@ -29,7 +32,7 @@ export default function yargsOptions(argv) {
     })
     .option('mangle_globals', {
       type: 'boolean',
-      'default': false,
+      'default': undefined,
       describe: '[default false] Mangle global variables'
     })
 
@@ -103,10 +106,12 @@ export default function yargsOptions(argv) {
     })
     .option('presets', {
       type: 'array',
+      'default': undefined,
       describe: '[default []] pass presets to babel transformation'
     })
     .option('plugins', {
       type: 'array',
+      'default': undefined,
       describe: '[default []] pass plugins to babel transformation'
     })
     .option('minify', {

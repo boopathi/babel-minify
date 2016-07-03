@@ -1,5 +1,5 @@
 // @flow
-export default function* nameGenerator() /*:Generator<string,void,void>*/ {
+export default function* nameGenerator() /*:Iterator<string>*/ {
   const atoz = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let i = 0;
   /* eslint-disable no-constant-condition */
