@@ -1,7 +1,7 @@
 // @flow
 /*::import type {NodePath, Binding, Scope, Node, PluginOptions} from 'Babel';*/
 function isReplacable(path) {
-  if (typeof path.get('name').node !== 'undefined') return false;
+  if (path.get('id').node) return false;
   let replacable = true;
   path.traverse({
     ThisExpression() {

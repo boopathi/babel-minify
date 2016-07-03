@@ -31,4 +31,25 @@ describe('babel-plugin-transform-function-to-arrow', function () {
       trim('var y = a => doSomething(a) + a')
     );
   });
+
+  it('should not transform functions with this and arguments', function () {
+    expect(
+      test('var x = function () { return arguments[0]; }')
+    ).toEqual(
+      trim('var x = function () { return arguments[0]; }')
+    );
+    expect(
+      test('const a = function (x) { this.x = x }')
+    ).toEqual(
+      trim('const a = function (x) { this.x = x }')
+    );
+  });
+
+  it('should not transform named functions', function () {
+    expect(
+      test('var x = function x() { return 5 }')
+    ).toEqual(
+      trim('var x = function x() { return 5 }')
+    );
+  });
 });
