@@ -1,18 +1,13 @@
+// @flow
+/*::import type {NodePath, Binding, Scope, Node, PluginOptions} from 'Babel';*/
 function isReplacable(path) {
-  /**
-   * If the FunctionExpression is not a part of a VariableDeclaration
-   * then it's not safe to transform because there can be a binding
-   * to the function in the place it is being used.
-   */
-  if (!path.parentPath.isVariableDeclarator()) return false;
-  if (typeof path.get('name') !== 'undefined') return false;
-
+  if (typeof path.get('name').node !== 'undefined') return false;
   let replacable = true;
   path.traverse({
-    ThisExpression(_) {
+    ThisExpression() {
       replacable = false;
     },
-    Identifier(idPath) {
+    Identifier(idPath /*:NodePath*/) {
       if (idPath.node.name === 'arguments')
         replacable = false;
     }
@@ -23,15 +18,15 @@ function isReplacable(path) {
 function isArrowReplacable(path) {
   let body = path.get('body');
   if ( body.isBlockStatement()
-    && body.get('body').length === 1
-    && body.get('body')[0].type === "ReturnStatement")
+    && body.node.body.length === 1
+    && body.node.body[0].type === "ReturnStatement")
     return true;
 }
 
-export default function ({types: t}) {
+export default function ({types: t} /*:PluginOptions*/) {
   return {
     visitor: {
-      FunctionExpression(path) {
+      FunctionExpression(path /*:NodePath*/) {
         if (isReplacable(path)) {
           path.replaceWith(
             t.arrowFunctionExpression(
@@ -40,12 +35,14 @@ export default function ({types: t}) {
           );
         }
       },
-      ArrowFunctionExpression(path) {
-        if (isArrowReplacable(path)) {
-          var body = path.get('body');
-          body.replaceWith(
-            body.node.body[0].argument
-          );
+      ArrowFunctionExpression: {
+        exit(path /*:NodePath*/) {
+          if (isArrowReplacable(path)) {
+            var body = path.get('body');
+            body.replaceWith(
+              body.node.body[0].argument
+            );
+          }
         }
       }
     }
