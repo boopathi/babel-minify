@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-transform-evaluate",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Evaluate constant expressions",
   "main": "lib/index.js",
   "author": "boopathi",
