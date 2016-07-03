@@ -1,6 +1,6 @@
 {
   "name": "babel-minify",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Babel minify Node API and CLI",
   "main": "lib/index.js",
   "author": "boopathi",
@@ -10,10 +10,10 @@
   },
   "dependencies": {
     "babel-core": "^6.10.4",
-    "babel-plugin-transform-conditionals": "^0.1.1",
+    "babel-plugin-transform-conditionals": "^0.1.2",
     "babel-plugin-transform-dead-code-elimination": "^2.0.1",
-    "babel-plugin-transform-evaluate": "^0.1.7",
-    "babel-plugin-transform-mangle": "^0.1.5",
+    "babel-plugin-transform-evaluate": "^0.1.8",
+    "babel-plugin-transform-mangle": "^0.1.6",
     "babel-plugin-transform-member-expression-literals": "^6.8.0",
     "babel-plugin-transform-merge-sibling-variables": "^6.8.0",
     "babel-plugin-transform-minify-booleans": "^6.8.0",
