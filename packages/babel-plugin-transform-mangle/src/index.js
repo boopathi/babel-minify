@@ -42,7 +42,11 @@ function renameIdentifiers(path /* :NodePath */, {
      */
     .filter(b => {
       if (!keep_fnames) return true;
-      return !isFunction(path.scope.getBinding(b));
+      const binding = path.scope.getBinding(b);
+      if (!binding) {
+        throw new TypeError('[mangle] Unexpected error. Binding not found');
+      }
+      return !isFunction(binding);
     })
     /**
      * Iterate through the possible names one by one until we

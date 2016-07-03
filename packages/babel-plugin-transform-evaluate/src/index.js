@@ -35,7 +35,7 @@ export default function Evaluate({types: t} /*:PluginOptions*/) {
             function deopt () {
               Object.keys(idBindings).forEach(id => {
                 const binding = path.scope.getBinding(id);
-                binding.deoptValue();
+                if (binding) binding.deoptValue();
               });
             }
 

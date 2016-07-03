@@ -62,7 +62,7 @@ declare module Babel {
   declare class Scope {
     getFunctionParent(): Scope,
     getProgramParent(): Scope,
-    getBinding(b: string): Binding,
+    getBinding(b: string): Binding | null,
     rename(a: string, b: string): void,
     hasOwnBinding(a: string): bool,
     getAllBindings(): Object,
