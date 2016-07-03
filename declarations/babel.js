@@ -29,8 +29,6 @@ declare module Babel {
     hasDeoptedValue: bool,
   }
 
-  // This conflicts with the native Node definition
-  // and I don't know any other way to override that
   declare class Node {
     body: Object,
     name: string,
