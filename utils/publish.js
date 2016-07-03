@@ -10,80 +10,58 @@ const lerna = require('lerna');
 const npm = require('lerna/lib/NpmUtilities');
 const git = require('lerna/lib/GitUtilities');
 
-// function runVersion(cb) {
-//   const PublishCommand = lerna.__commands__.publish;
-//   const flags = {
-//     skipNpm: true
-//   };
-//   const publish = new PublishCommand([], flags);
-//   publish.runValidations();
-//   publish.runPreparations();
-//   publish._attempt('initialize', () => {
-//     publish._attempt('execute', () => {
-//       cb();
-//     });
-//   });
-// }
+function runVersion(cb) {
+  const PublishCommand = lerna.__commands__.publish;
+  const flags = {
+    skipNpm: true,
+    skipGit: true,
+  };
+  const publish = new PublishCommand([], flags);
+  publish.runValidations();
+  publish.runPreparations();
+  publish._attempt('initialize', () => {
+    publish._attempt('execute', () => {
+      cb();
+    });
+  });
+}
 
 function runPublish(cb) {
-  const UpdatedCommand = lerna.__commands__.updated;
+  const PublishCommand = lerna.__commands__.publish;
+  const flags = {
+    skipNpm: true,
+    skipGit: true,
+  };
+  const publish = new PublishCommand([], flags);
+  publish.runValidations();
+  publish.runPreparations();
 
-  const updated = new UpdatedCommand([], {});
-  updated.runPreparations();
-  updated.initialize(function () {
+  publish.initialize(function (err) {
+    if (err) throw err;
 
     let published = 0;
     let errors = [];
-    let outputs = [];
+    let output = [];
 
-    updated.updates.forEach(update => {
+    publish.updateUpdatedPackages();
+
+    publish.updates.forEach(update => {
       const dir = update.package.location;
       const tag = 'latest';
       npm.publishTaggedInDir(tag, dir, function (err, out) {
-        errors.push(err);
-        outputs.push(out);
-        published++;
-
-        if (published >= updated.updates.length) {
-          cb(errors, outputs, updated.updates);
-        }
+        cb(err, out, update, publish);
       });
     });
   });
 }
 
 function run() {
-  const primaryPackage = 'babel-minify';
-
-  runPublish(function (errors, outputs, updates) {
-    errors.forEach(err => {
-      if (err) throw err;
-    });
+  runPublish(function (err, out, update) {
     /* eslint-disable no-console */
-    outputs.forEach(out => console.log(out));
+    console.log(update.package.name, update.package.version);
+    if (err) return console.error(err.toString());
+    console.log(out.toString());
     /* eslint-enable */
-
-    let primaryPresent = false;
-    let primary = null;
-    for (let i of updates) {
-      if (updates[i].package.name === primaryPackage) {
-        primaryPresent = true;
-        primary = updates[i];
-        break;
-      }
-    }
-
-    if (primaryPresent) {
-      const tag = `v${primary.package.version}`;
-      git.addTag(tag);
-      git.pushWithTags([tag]);
-    } else {
-      const tags = updates.map(update =>
-        `${update.package.name}@${update.package.version}`
-      );
-      tags.forEach(tag => git.addTag(tag));
-      git.pushWithTags(tags);
-    }
   });
 }
 
