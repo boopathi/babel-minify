@@ -6,13 +6,9 @@
  * https://github.com/npm/newww/issues/389
  */
 
-const fs = require('fs');
-const path = require('path');
 const lerna = require('lerna');
 const npm = require('lerna/lib/NpmUtilities');
 const git = require('lerna/lib/GitUtilities');
-
-const packagesDir = path.join(__dirname, '../packages');
 
 // function runVersion(cb) {
 //   const PublishCommand = lerna.__commands__.publish;
@@ -57,14 +53,15 @@ function runPublish(cb) {
 }
 
 function run() {
-  let updates = [];
   const primaryPackage = 'babel-minify';
 
   runPublish(function (errors, outputs, updates) {
     errors.forEach(err => {
       if (err) throw err;
     });
+    /* eslint-disable no-console */
     outputs.forEach(out => console.log(out));
+    /* eslint-enable */
 
     let primaryPresent = false;
     let primary = null;
