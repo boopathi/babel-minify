@@ -17,6 +17,7 @@ npm install babel-preset-min --save-dev
   "presets": ["min"],
   "comments": false,
   "compact": true,
-  "minified": true
+  "minified": true,
+  "passPerPreset": true
 }
 ```
