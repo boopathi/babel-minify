@@ -1,12 +1,12 @@
 {
   "name": "gulp-babel-minify",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Gulp plugin for babel-minify",
   "main": "lib/index.js",
   "author": "boopathi",
   "license": "MIT",
   "dependencies": {
-    "babel-minify": "^0.1.10",
+    "babel-minify": "^0.1.11",
     "through2": "^2.0.1"
   },
   "homepage": "https://github.com/boopathi/babel-minify",
