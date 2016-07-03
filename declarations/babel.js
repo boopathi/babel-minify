@@ -7,6 +7,7 @@ declare module Babel {
     valueToNode(a :any): Node,
     variableDeclaration(v: VariableKind, d: Declarator[]): Node,
     variableDeclarator(n: Node): Node,
+    arrowFunctionExpression(params: any, body: any): Node,
   }
 
   declare type PluginOptions = {
@@ -30,8 +31,11 @@ declare module Babel {
   }
 
   declare class Node {
-    body: Object,
+    type: string,
+    body: Node[],
     name: string,
+    params: any,
+    argument: Node,
   }
 
   declare class NodePath {

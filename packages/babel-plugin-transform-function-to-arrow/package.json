@@ -1,0 +1,13 @@
+{
+  "name": "babel-plugin-transform-function-to-arrow",
+  "version": "0.0.0",
+  "description": "Converts function expressions to arrow expressions",
+  "main": "lib/index.js",
+  "author": "boopathi",
+  "license": "MIT",
+  "homepage": "https://github.com/boopathi/babel-minify",
+  "repository": "https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-function-to-arrow",
+  "browserify": {
+    "transform": [["babelify", { "presets": ["es2015"] }]]
+  }
+}
