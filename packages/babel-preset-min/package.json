@@ -1,6 +1,6 @@
 {
   "name": "babel-preset-min",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "A Preset containing default optimizations defined in babel-minify",
   "main": "index.js",
   "author": "boopathi",
