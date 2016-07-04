@@ -62,7 +62,7 @@ More details here - https://github.com/boopathi/babel-minify/blob/master/package
 
 This is a preset that uses the default options of [babel-minify](https://github.com/boopathi/babel-minify/tree/master/packages/babel-minify)
 
-**WARNING:** This might cause some regression, depending on what other plugins and presets you use with this preset - because all the plugins are applied in one pass by default by babel. You can enable the `passPerPreset` option in babel, but then all the `babel-minify` plugins are still applied in one pass. So, consider using  `babel-minify` NodeAPI or CLI or Gulp task with the [options](https://github.com/boopathi/babel-minify/tree/master/packages/babel-minify#options) - `plugins: []` and `presets: []` to pass your other plugins and presets.
+**WARNING:** This might cause some regression, depending on what other plugins and presets you use with this preset - because all the plugins are applied in one pass by default in babel. You can enable the `passPerPreset` option in babel, but then all the `babel-minify` plugins are still applied in one pass. So, consider using  `babel-minify` NodeAPI or CLI or Gulp task with the [options](https://github.com/boopathi/babel-minify/tree/master/packages/babel-minify#options) - `plugins: []` and `presets: []` to pass your other plugins and presets.
 
 ```json
 {
