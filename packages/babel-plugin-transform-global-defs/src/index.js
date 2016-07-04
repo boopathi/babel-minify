@@ -2,7 +2,7 @@
 /*::import type {NodePath, Binding, Scope, Node, PluginOptions} from 'Babel';*/
 export default function ({types: t} /*:PluginOptions*/) {
   let globalDefs /*:Object*/ = {};
-  const deopts /*:string[]*/ = [];
+  let deopts /*:string[]*/ = [];
 
   let _definitions /*:[[string, mixed]]*/ = [];
   let definitions /*:[{
@@ -45,6 +45,10 @@ export default function ({types: t} /*:PluginOptions*/) {
 
         globalDefs = global_defs;
 
+        // !important
+        // flush the deopts, otherwise it is preserved in memory
+        deopts = [];
+
         _definitions = getAllPaths(globalDefs);
         definitions = _definitions.map(defn => {
           const root /*:string*/ = defn[0];
@@ -53,6 +57,9 @@ export default function ({types: t} /*:PluginOptions*/) {
           return {root, expr, value, allExpr};
         });
       },
+
+      // TODO
+      // UpdateExpression x++ things
 
       AssignmentExpression(path /*:NodePath*/) {
         const left = path.get('left');
@@ -94,6 +101,30 @@ export default function ({types: t} /*:PluginOptions*/) {
 
       Identifier: {
         exit(path /*:NodePath*/) {
+
+          // replaceable paths
+          let replaceablePaths = [
+            'BinaryExpression',
+            'LogicalExpression',
+            'ExpressionStatement',
+            'Conditional',
+            'SwitchStatement',
+            'SwitchCase',
+            'WhileStatement',
+            'DoWhileStatement',
+            'ForStatement'
+          ];
+
+          let replaceable = false;
+
+          for (let i of replaceablePaths) {
+            if (path.parentPath['is'+i]()) {
+              replaceable = true;
+            }
+          }
+
+          if (!replaceable) return;
+
           definitions.filter(({root, expr}) => root === expr)
             .forEach(({root, value}) => {
               if (!path.scope.hasBinding(root)

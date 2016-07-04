@@ -54,6 +54,7 @@ declare module Babel {
 
     scope: Scope,
     node: Node,
+    parentPath: NodePath,
 
     get(s: string): NodePath,
     replaceWith(n: Node): void,
@@ -66,6 +67,10 @@ declare module Babel {
 
     // others
     forEach(a: any): void,
+
+    // FIXME
+    // Temporary Fix
+    [key: string]: Function,
   }
 
   declare class Scope {
