@@ -60,6 +60,10 @@ More details here - https://github.com/boopathi/babel-minify/blob/master/package
 
 ### [babel-preset-min](https://github.com/boopathi/babel-minify/blob/master/packages/babel-preset-min)
 
+This is a preset that uses the default options of [babel-minify](https://github.com/boopathi/babel-minify/tree/master/packages/babel-minify)
+
+**WARNING:** This might cause some regression, depending on what other plugins and presets you use with this preset - because all the plugins are applied in one pass by default by babel. You can enable the `passPerPreset` option in babel, but then all the `babel-minify` plugins are still applied in one pass. So, consider using  `babel-minify` NodeAPI or CLI or Gulp task with the [options](https://github.com/boopathi/babel-minify/tree/master/packages/babel-minify#options) - `plugins: []` and `presets: []` to pass your other plugins and presets.
+
 ```json
 {
   "presets": ["min"],
@@ -71,7 +75,7 @@ More details here - https://github.com/boopathi/babel-minify/blob/master/package
 
 ## Sample App Usage
 
-When you bundle your code, remember to split your bundle into multiple packages or at least `vendor` and your `app` code separately. Usually, the vendor code will be ES5 compatible and UglifyJS does a better job here. And all your code is ES6 and you may want to ship this ES6 code to browsers. So you pass this ES6 code via babel using a specific set of plugins that does the optimizations and minification for you.
+When you bundle your code, remember to split your bundle into multiple packages or at least `vendor` and your `app` code separately. Usually, the vendor code will be ES5 compatible and UglifyJS does a better job here. And all the code you write is mostly ES6. You may want to ship this ES6 code to browsers. So we can pass this ES6 code via babel using a specific set of plugins applied in some fashion and make it do the optimizations and minification for you.
 
 **webpack.config.js**
 
@@ -122,10 +126,6 @@ gulp.task('minify-app', ['webpack'], function() {
     .pipe(gulp.dest('build/minified'));
 });
 ```
-
-## Options
-
-
 
 ## LICENSE
 
