@@ -33,3 +33,9 @@ declare type ManglerOptions = {
     mangle_globals: boolean
   }
 }
+
+declare type GlobalDefsOptions = {
+  opts: {
+    global_defs: Object,
+  }
+}

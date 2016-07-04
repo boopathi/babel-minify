@@ -45,12 +45,16 @@ declare module Babel {
 
     isBlockStatement(): bool,
 
+    isMemberExpression(): bool,
+
     isFunctionDeclaration(): bool,
     isFunctionExpression(): bool,
     isClassDeclaration(): bool,
     isClassExpression(): bool,
+
     scope: Scope,
     node: Node,
+
     get(s: string): NodePath,
     replaceWith(n: Node): void,
     replaceWithMultiple(n: Node[]): void,
@@ -58,6 +62,7 @@ declare module Babel {
     traverse(v: Object): void,
     evaluate(): EvaluateResult,
     getBindingIdentifiers(): Object,
+    matchesPattern(a :string): bool,
 
     // others
     forEach(a: any): void,

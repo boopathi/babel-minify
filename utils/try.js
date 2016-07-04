@@ -1,43 +1,36 @@
 /* eslint-disable */
-const plugin = require('../packages/babel-plugin-transform-evaluate');
+const plugin = require('../packages/babel-plugin-transform-global-defs');
 const babel = require('babel-core');
 const minify = require('../packages/babel-minify');
 
 let input =
 `
-function asdf() {}
-function a() {
-  var x = 5;
-  let [y] = [0, x];
-  {
-    var z = 5;
-    let r = 1;
-    function asdf () {}
-  }
-  asdf();
+function X() {
+  process.x = 'production';
+}
 
-  function b() {}
-  b();
+if (process.env.NODE_ENV === 'production') {
+  console.log('hi');
 }
 `
 
-input = `
+const output = babel.transform(input, {
+  babelrc: false,
+  plugins: [[plugin, {
+    global_defs: {
+      process: {
+        env: {
+          NODE_ENV: 'production'
+        }
+      }
+    }
+  }]]
+}).code;
 
-{
-  function a() {}
-}
-a();
-`
-
-// const output = babel.transform(input, {
-//   babelrc: false,
-//   plugins: [plugin]
+// const output = minify(input, {
+//   mangle_globals: true,
+//   npasses: 1,
 // });
-
-const output = minify(input, {
-  mangle_globals: true,
-  npasses: 1,
-});
 
 console.log('Input:');
 console.log(input);

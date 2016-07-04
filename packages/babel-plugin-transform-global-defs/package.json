@@ -1,0 +1,13 @@
+{
+  "name": "babel-plugin-transform-globals-defs",
+  "version": "0.0.0",
+  "description": "Transform global definitions that are available at build time",
+  "main": "lib/index.js",
+  "author": "boopathi",
+  "license": "MIT",
+  "homepage": "https://github.com/boopathi/babel-minify",
+  "repository": "https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-global-defs",
+  "browserify": {
+    "transform": [["babelify", { "presets": ["es2015"] }]]
+  }
+}
