@@ -1,23 +1,37 @@
 .container {
   display: -webkit-flex;
   display: flex;
-  -webkit-flex-flow: row wrap;
-          flex-flow: row wrap;
+  -webkit-flex-direction: row;
+          flex-direction: row;
+          flex-direction: row;
+  -webkit-flex-wrap: wrap;
+          flex-wrap: wrap;
+          flex-wrap: wrap;
 }
 
 .input-container {
   width: 100%;
   min-height: 300px;
+  position: relative;
 }
 .output-container {
   width: 100%;
   min-height: 300px;
+  position: relative;
 }
 .toolbox {
   width: 100%;
 }
 .toolbox .tool {
   float: left;
+}
+
+#input, #output {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 @media(min-width: 640px) {
