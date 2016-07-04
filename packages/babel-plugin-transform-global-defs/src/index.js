@@ -2,18 +2,23 @@
 /*::import type {NodePath, Binding, Scope, Node, PluginOptions} from 'Babel';*/
 export default function ({types: t} /*:PluginOptions*/) {
   let globalDefs /*:Object*/ = {};
-  const deopts = [];
+  const deopts /*:string[]*/ = [];
 
-  let _definitions = [];
-  let definitions = [];
+  let _definitions /*:[[string, mixed]]*/ = [];
+  let definitions /*:[{
+    root:string,
+    expr: string,
+    value: mixed,
+    allExpr: [string]
+  }]*/= [];
 
-  function deopt(expr) {
+  function deopt(expr /*:string*/) {
     // debug
     // console.log('deopting', expr);
     deopts.push(expr);
   }
 
-  function isDeopt(expr) {
+  function isDeopt(expr /*:string*/) /*:bool*/{
     for (let i = 0; i < deopts.length; i++) {
       if (expr.indexOf(deopts[i]) !== -1) {
         return true;
@@ -42,9 +47,6 @@ export default function ({types: t} /*:PluginOptions*/) {
 
         _definitions = getAllPaths(globalDefs);
         definitions = _definitions.map(defn => {
-          if (typeof defn[0] === 'number') {
-            throw new Error('global_defs is an array - Report bug');
-          }
           const root /*:string*/ = defn[0];
           const {expr, value} = getExpressionFromPath(defn);
           const allExpr = getAllExpressionsFromPath(defn);
@@ -152,8 +154,8 @@ function hasCircularReference(obj /*:Object*/) /*:bool*/ {
   return walk(obj);
 }
 
-function getAllPaths(obj /*:Object*/) /*:[[string, string|number, ...mixed]]*/ {
-  let paths /*[[string]]*/ = [];
+function getAllPaths(obj /*:Object*/) /*:[[string, mixed]] */ {
+  let paths /*[[string, mixed]]*/ = [];
   function walk(o, state = []) {
     if (o && typeof o === 'object') {
       if (Array.isArray(o)) {
@@ -176,24 +178,26 @@ function getAllPaths(obj /*:Object*/) /*:[[string, string|number, ...mixed]]*/ {
 }
 
 
-function exprToString(expr /*:Array<string|number>*/) /*:string*/ {
+function exprToString(expr /*:[string, mixed]*/) /*:string*/ {
   return expr.reduce((p, c) => {
     if (typeof c === 'number') {
       return  `${p}[${c}]`;
     } else if (typeof c === 'string') {
       return p ? p + '.' +c : c;
+    } else {
+      throw new TypeError('Somehow value of expression came in to expression');
     }
   }, '');
 }
 
-function getExpressionFromPath(path /*:Array<string|number>*/) {
+function getExpressionFromPath(path /*:[string, mixed]*/) /*:{expr: string, value: mixed}*/ {
   let _expr = [...path];
-  const value = _expr.pop();
+  const value /*:mixed*/ = _expr.pop();
   let expr = exprToString(_expr);
   return {expr, value};
 }
 
-function getAllExpressionsFromPath(path /*:Array<string|number>*/) /*:string[]*/ {
+function getAllExpressionsFromPath(path /*:[string, mixed]*/) /*:string[]*/ {
   let _expr = [...path];
   _expr.pop(); // remove value
   let possibilities = [];
