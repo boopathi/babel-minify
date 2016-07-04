@@ -10,6 +10,11 @@ self.addEventListener('message', function(e) {
 
   var input = e.data.input;
   var opts = e.data.opts;
-  var result = BabelMinify(input, opts);
+  try {
+    var result = BabelMinify(input, opts);
+  } catch (err) {
+    console.log(err);
+    self.postMessage(err.toString());
+  }
   self.postMessage(result);
 });

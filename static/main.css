@@ -1,24 +1,47 @@
 .container {
-  height: 100vh;
+  display: -webkit-flex;
   display: flex;
-  flex-direction: column;
+  -webkit-flex-flow: row wrap;
+          flex-flow: row wrap;
 }
 
-.main {
-  height: 100%;
-  display: flex;
-  flex-direction; row;
+.input-container {
+  width: 100%;
+  min-height: 300px;
 }
-
-.footer {
-  padding: 5px;
+.output-container {
+  width: 100%;
+  min-height: 300px;
 }
-
 .toolbox {
-  padding: 3px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  width: 100%;
+}
+.toolbox .tool {
+  float: left;
+}
+
+@media(min-width: 640px) {
+  .container {
+    height: 99vh;
+  }
+  .input-container {
+    width: 50%;
+    -webkit-order: 1;
+            order: 1;
+  }
+  .output-container {
+    width: 30%;
+    -webkit-order: 2;
+            order: 2;
+  }
+  .toolbox {
+    width: 20%;
+    -webkit-order: 3;
+            order: 3;
+  }
+  .toolbox .tool {
+    float: none;
+  }
 }
 
 .toolbox .tool {
@@ -31,12 +54,6 @@
   outline: none;
 }
 
-.input-container, .output-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
 #input, #output {
   width: 100%;
   box-sizing: border-box;
@@ -46,18 +63,17 @@
 }
 
 .runner {
-  position: fixed;
-  top: 0;
-  width: 75px;
-  margin-left: 50%;
-  left: -75px;
+  width: 95%;
+  height: 40px;
+  margin: 10px auto;
   font-size: larger;
 }
 
 .runner #run {
   width: 100%;
+  height: 100%;
   background: white;
-  border: solid 1px black;
+  border: solid 1px #a0a0a0;
   border-radius: 5px;
 }
 

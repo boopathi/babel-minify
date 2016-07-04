@@ -4,38 +4,35 @@
     <title>Babel Minify</title>
 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
 
     <link rel="prefetch" href="static/worker.js" />
     <link rel="prefetch" href="build/babel-minify.js" />
     <link rel="prefetch" href="static/script.js" />
-    <link rel="prefetch" href="https://npmcdn.com/localforage@1.4.2/dist/localforage.min.js"/>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/normalize/3.0.3/normalize.min.css"/>
     <link rel="stylesheet" href="static/main.css" />
   </head>
   <body>
     <div class="container">
-      <div class="main">
-        <div class="input-container">
-          <textarea id="input"></textarea>
-        </div>
-        <div class="output-container">
-          <textarea id="output"></textarea>
-        </div>
+      <div class="input-container">
+        <div id="input"></div>
       </div>
-      <div class="footer">
-        <div class="toolbox">
-          <button id="purge" class="tool">Purge Caches</button>
+      <div class="toolbox">
+        <div class="runner">
+          <button id="run">🎁 Minify</button>
         </div>
+        <button id="purge" class="tool">Purge Caches</button>
       </div>
-    </div>
-    <div class="runner">
-      <button id="run">🎁 <small>Minify</small></button>
+      <div class="output-container">
+        <textarea id="output"></textarea>
+      </div>
     </div>
 
-    <script src="https://npmcdn.com/localforage@1.4.2/dist/localforage.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/localforage/1.4.2/localforage.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/ace/1.2.3/min/ace.js"></script>
     <script src="static/script.js"></script>
 
     <script>
