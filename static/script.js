@@ -3,7 +3,7 @@
   var output = document.getElementById('output');
   var run = document.getElementById('run');
   var purge = document.getElementById('purge');
-  var toolbox = document.querySelector('.toolbox');
+  var toolbox = document.querySelector('.tools');
   var minifier = new Worker('static/worker.js');
   var cachename = 'babel-minify-1';
 
@@ -28,14 +28,61 @@
     join_vars: true,
     booleans: true,
     unsafe: true,
-    keep_fnames: false
+    keep_fnames: false,
+    npasses: 1,
   };
 
-  var readyText = run.innerHTML;
-  var loadingText = "loading ...";
+  /**
+   * More than a state
+   * State and its modifiers
+   */
+  var state = {
+    running: false,
+    readyText: run.innerHTML,
+    loadingText: 'loading ...',
+    replaceTimeout: null,
+    enableRun: function() {
+      this.running = false;
+      clearTimeout(this.replaceTimeout);
+      run.innerHTML = this.readyText;
+      run.disabled = false;
+    },
+    disableRun: function() {
+      this.running = true;
+      var loadingText = this.loadingText;
+      this.replaceTimeout = setTimeout(function () {
+        run.innerHTML = loadingText;
+      }, 80);
+      run.disabled = true;
+    },
+    run: function () {
+      if (!this.running) {
+        this.disableRun();
+        editor.focus();
+        minifier.postMessage({
+          input: editor.getValue(),
+          opts: minifierOpts
+        });
+      } else {
+        console.log('already running');
+      }
+    }
+  };
 
-  disableRun();
-  createOptionsBoxes();
+  state.disableRun();
+  createOptionsBoxes().then(function () {
+    // kick start
+    // final steps
+    minifier.postMessage({ start: true });
+  });
+
+  document.body.addEventListener('keydown', function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.keyCode === 13) {
+      e.preventDefault();
+      e.stopPropagation();
+      state.run();
+    }
+  });
 
   editor.on('input', function() {
     localforage.setItem(cachename, editor.getValue());
@@ -48,16 +95,11 @@
 
   run.addEventListener('click', function(e) {
     e.preventDefault();
-    disableRun();
-    editor.focus();
-    minifier.postMessage({
-      input: editor.getValue(),
-      opts: minifierOpts
-    });
+    state.run();
   });
 
   minifier.addEventListener('message', function(out) {
-    enableRun();
+    state.enableRun();
     if (typeof out.data === 'string') {
       output.value = out.data;
     }
@@ -69,10 +111,6 @@
       console.log('removing all caches [done]');
     });
   });
-
-  // kick start
-  // final steps
-  minifier.postMessage({ start: true });
 
   // service worker
   if (navigator.serviceWorker) {
@@ -89,12 +127,35 @@
   /**
    * Functions
    */
+  function createNumbersBox() {
+    console.timer()
+    var box = document.createElement('select');
+    for (var i=0; i<4; i++) {
+      var opt = document.createElement('option');
+      opt.value = i + 1;
+      opt.innerText = i + 1;
+      box.appendChild(opt);
+    }
+    return box;
+  }
   function createOptionBox(option) {
-    var box = document.createElement('input');
-    box.type = 'checkbox';
-    box.checked = minifierOpts[option];
+    var box, property;
+    switch (typeof minifierOpts[option]) {
+      case 'boolean':
+      box = document.createElement('input');
+      property = 'checked';
+      box.type = 'checkbox';
+      break;
+
+      case 'number':
+      box = createNumbersBox();
+      property = 'value';
+      break;
+    }
+
+    box[property] = minifierOpts[option];
     box.addEventListener('change', function(e) {
-      minifierOpts[option] = this.checked;
+      minifierOpts[option] = this[property];
       editor.focus();
     });
 
@@ -106,27 +167,26 @@
     div.className = 'tool option';
     div.appendChild(label);
 
-    toolbox.appendChild(div);
+    return div;
   }
 
+  /**
+   * Just some weird experiment.
+   * Why not?
+   */
   function createOptionsBoxes() {
-    Object.keys(minifierOpts).forEach(function(option) {
-      createOptionBox(option);
-    });
-  }
-
-  var runTimeout;
-
-  function enableRun() {
-    clearTimeout(runTimeout);
-    run.innerHTML = readyText;
-    run.disabled = false;
-  }
-  function disableRun() {
-    runTimeout = setTimeout(function() {
-      run.innerHTML = loadingText;
-    }, 80);
-    run.disabled = true;
+    return Object.keys(minifierOpts)
+      .map(function(option) {
+        return createOptionBox(option);
+      })
+      .forEach(function(div) {
+        return new Promise(function (resolve) {
+          requestAnimationFrame(function () {
+            toolbox.appendChild(div);
+            resolve();
+          });
+        });
+      });
   }
 
   function removeCaches() {
@@ -140,5 +200,4 @@
     }
     return Promise.all(p);
   }
-
 })();

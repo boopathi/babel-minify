@@ -78,7 +78,7 @@
 
 .runner {
   width: 95%;
-  height: 40px;
+  height: 50px;
   margin: 10px auto;
   font-size: larger;
 }
@@ -93,4 +93,13 @@
 
 .runner #run small {
   font-size: smaller;
+}
+
+.github {
+  text-align: center;
+  margin: 10px;
+}
+
+.keyboard-shortcut {
+  font-size: 10px;
 }
