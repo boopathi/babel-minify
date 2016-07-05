@@ -174,11 +174,11 @@
    * Why not?
    */
   function createOptionsBoxes() {
-    return Object.keys(minifierOpts)
+    var promises = Object.keys(minifierOpts)
       .map(function(option) {
         return createOptionBox(option);
       })
-      .forEach(function(div) {
+      .map(function(div) {
         return new Promise(function (resolve) {
           requestAnimationFrame(function () {
             toolbox.appendChild(div);
@@ -186,6 +186,7 @@
           });
         });
       });
+    return Promise.all(promises);
   }
 
   function removeCaches() {
