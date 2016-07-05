@@ -128,7 +128,6 @@
    * Functions
    */
   function createNumbersBox() {
-    console.timer()
     var box = document.createElement('select');
     for (var i=0; i<4; i++) {
       var opt = document.createElement('option');
