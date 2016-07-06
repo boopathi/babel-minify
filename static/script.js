@@ -1,20 +1,91 @@
+function debounce(func, wait, immediate) {
+  "use strict";
+  var timeout;
+  return function() {
+    var context = this, args = arguments;
+    var later = function() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
+};
+
 (function() {
+  "use strict";
+  var stack = [];
+  var events = {};
+  var sendQueue = [];
+
+  var sendMetrics = debounce(function() {
+    var metric;
+    while (metric = stack.pop()) {
+      ga('send', 'timing', 'Performance', metric.name, Math.ceil(metric.time));
+    }
+  }, 1000);
+
+  window.push = function (name) {
+    if (console.time && window.TRACE) {
+      console.time(name);
+    }
+    if (window.performance && window.performance.now) {
+      startEvent(name, performance.now());
+    }
+  };
+  window.pop = function (name) {
+    if (console.time && window.TRACE) {
+      console.timeEnd(name);
+    }
+    if (window.performance && window.performance.now) {
+      stopEvent(name, performance.now());
+    }
+  };
+
+  function startEvent(name, startTime) {
+    if (!events.hasOwnProperty(name)) {
+      events[name] = [];
+    }
+    events[name].push(startTime);
+  }
+  function stopEvent(name, endTime) {
+    if (events.hasOwnProperty(name) && events[name].length > 0) {
+      var startTime = events[name].shift();
+      stack.push({
+        name: name,
+        time: (endTime - startTime).toFixed(4)
+      });
+      sendMetrics();
+    }
+  }
+})();
+
+(function() {
+  "use strict";
+  window.TRACE = false;
+  push('main');
   var input = document.getElementById('input');
   var output = document.getElementById('output');
   var run = document.getElementById('run');
   var purge = document.getElementById('purge');
   var toolbox = document.querySelector('.tools');
+  var githubStar = document.querySelector('.github-star');
+  push('minifier-worker-load');
   var minifier = new Worker('static/worker.js');
   var cachename = 'babel-minify-1';
+  var listeners = []; // event listener attachers
 
-  // enable editor
+  // ace boot up
+  push('ace-boot');
   ace.config.set('modePath', 'https://cdn.jsdelivr.net/ace/1.2.3/min/');
   ace.config.set('workerPath', 'https://cdn.jsdelivr.net/ace/1.2.3/min/');
   ace.config.set('themePath', 'https://cdn.jsdelivr.net/ace/1.2.3/min/');
   var editor = ace.edit('input');
-  // editor.$blockScrolling = Infinity;
   editor.getSession().setMode('ace/mode/javascript');
   editor.getSession().setOptions({ tabSize: 2, useSoftTabs: true });
+  pop('ace-boot');
 
   var minifierOpts = {
     mangle: true,
@@ -38,7 +109,7 @@
    */
   var state = {
     running: false,
-    readyText: run.innerHTML,
+    readyText: '🎁 Minify <div class="keyboard-shortcut">(Ctrl + ⏎)</div>',
     loadingText: 'loading ...',
     replaceTimeout: null,
     enableRun: function() {
@@ -57,6 +128,7 @@
     },
     run: function () {
       if (!this.running) {
+        push('minify-run');
         this.disableRun();
         editor.focus();
         minifier.postMessage({
@@ -70,59 +142,119 @@
   };
 
   state.disableRun();
-  createOptionsBoxes().then(function () {
-    // kick start
-    // final steps
-    minifier.postMessage({ start: true });
-  });
 
-  document.body.addEventListener('keydown', function (e) {
-    if ((e.ctrlKey || e.metaKey) && e.keyCode === 13) {
-      e.preventDefault();
-      e.stopPropagation();
-      state.run();
-    }
-  });
-
-  editor.on('input', function() {
-    localforage.setItem(cachename, editor.getValue());
-  });
-
-  localforage.getItem(cachename).then(value => {
-    if (value) editor.setValue(value, -1);
-    editor.focus();
-  });
-
-  run.addEventListener('click', function(e) {
-    e.preventDefault();
-    state.run();
-  });
-
-  minifier.addEventListener('message', function(out) {
-    state.enableRun();
-    if (typeof out.data === 'string') {
-      output.value = out.data;
-    }
-  });
-
-  purge.addEventListener('click', function(e) {
-    console.log('removing all caches');
-    removeCaches().then(function() {
-      console.log('removing all caches [done]');
+  // Boot up
+  Promise.resolve()
+    .then(function () { push('create-options') })
+    .then(createOptionsBoxes)
+    .then(function () { pop('create-options') })
+    .then(queueUpMinifierLoad)
+    .then(function () { push('attach-listeners') })
+    .then(attachListeners)
+    .then(function () { pop('attach-listeners'); push('populate-editor-from-cache') })
+    .then(populateEditor)
+    .then(function () { pop('populate-editor-from-cache'); push('github-star-button') })
+    .then(enableGithubStarButton)
+    .then(function () { pop('github-star-button') })
+    .catch(function (err) {
+      throw err;
     });
-  });
 
-  // service worker
-  if (navigator.serviceWorker) {
-    navigator.serviceWorker.register('sw.js').then(function(reg) {
-      purge.addEventListener('click', function(e) {
-        console.log('removing sw');
-        reg.unregister().then(function() {
-          console.log('removing sw [done]');
-        });
+  function queueUpMinifierLoad() {
+    minifier.postMessage({ start: true });
+  }
+
+  function enableGithubStarButton() {
+    return new Promise(function (resolve) {
+      requestAnimationFrame(function () {
+        var doc = githubStar.contentWindow.document;
+        window.d = doc;
+        var src = "https://ghbtns.com/github-btn.html?user=boopathi&repo=babel-minify&type=star&count=true&size=large";
+        doc.open().write(
+          '<body onload="' +
+          'window.location.href = \'' + encodeURI(src) + '\'' +
+          // 'var d = document;d.getElementsByTagName(\'head\')[0]' +
+          // '.appendChild(d.createElement(\'script\')).src = \'' + encodeURI(src) + '\'' +
+          '">'
+        );
+        doc.close();
       });
     });
   }
+
+  function populateEditor() {
+    return localforage.getItem(cachename).then(value => {
+      if (value) editor.setValue(value, -1);
+      editor.focus();
+    });
+  }
+
+  function attachListeners() {
+    listeners.map(function (listener) {
+      listener();
+    });
+  }
+
+  listeners.push(function () {
+    document.body.addEventListener('keydown', function (e) {
+      if ((e.ctrlKey || e.metaKey) && e.keyCode === 13) {
+        e.preventDefault();
+        e.stopPropagation();
+        ga('send', 'event', {
+          eventCategory: 'Run',
+          eventAction: 'Ctrl-Enter'
+        });
+        state.run();
+      }
+    });
+  });
+
+  listeners.push(function () {
+    editor.on('input', function() {
+      localforage.setItem(cachename, editor.getValue());
+    });
+  });
+
+  listeners.push(function () {
+    run.addEventListener('click', function(e) {
+      e.preventDefault();
+      ga('send', 'event', {
+        eventCategory: 'Run',
+        eventAction: 'Minify-Button'
+      });
+      state.run();
+    });
+  });
+
+  listeners.push(function () {
+    minifier.addEventListener('message', function(out) {
+      if (typeof out.data === 'object' && out.data.ready) {
+        pop('minifier-worker-load');
+      } else {
+        pop('minify-run');
+      }
+      state.enableRun();
+      if (typeof out.data === 'string') {
+        var percentage = 100 * (1 - out.data.length / editor.getValue().length);
+        ga('send', 'event', {
+          eventCategory: 'Run',
+          eventAction: 'Compression-Percentage',
+          eventValue: Math.ceil(percentage)
+        });
+        console.log('Compression percentage = ', percentage);
+        output.value = out.data;
+      }
+    });
+  });
+
+  listeners.push(function () {
+    purge.addEventListener('click', function(e) {
+      console.log('removing all caches');
+      removeCaches().then(function() {
+        console.log('removing all caches [done]');
+      });
+    });
+  });
 
   /**
    * Functions
@@ -174,19 +306,10 @@
    * Why not?
    */
   function createOptionsBoxes() {
-    var promises = Object.keys(minifierOpts)
+    Object.keys(minifierOpts)
       .map(function(option) {
-        return createOptionBox(option);
+        toolbox.appendChild(createOptionBox(option));
       })
-      .map(function(div) {
-        return new Promise(function (resolve) {
-          requestAnimationFrame(function () {
-            toolbox.appendChild(div);
-            resolve();
-          });
-        });
-      });
-    return Promise.all(promises);
   }
 
   function removeCaches() {
@@ -200,4 +323,18 @@
     }
     return Promise.all(p);
   }
+
+  // service worker
+  if (navigator.serviceWorker) {
+    navigator.serviceWorker.register('sw.js').then(function(reg) {
+      purge.addEventListener('click', function(e) {
+        console.log('removing sw');
+        reg.unregister().then(function() {
+          console.log('removing sw [done]');
+        });
+      });
+    });
+  }
+
+  pop('main');
 })();

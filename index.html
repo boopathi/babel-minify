@@ -22,11 +22,11 @@
       </div>
       <div class="toolbox">
         <div class="runner">
-          <button id="run">🎁 Minify <div class="keyboard-shortcut">(Ctrl + ⏎)</div></button>
+          <button id="run">loading ...</button>
         </div>
         <div class="github">
           <iframe
-            src="https://ghbtns.com/github-btn.html?user=boopathi&repo=babel-minify&type=star&count=true&size=large"
+            class="github-star"
             frameborder="0"
             scrolling="0"
             width="130px"
@@ -51,7 +51,10 @@
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
       })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-      ga('create', 'UA-22586438-5', 'auto');
+      ga('create', 'UA-22586438-5', {
+        siteSpeedSampleRate: 100,
+        sampleRate: 100,
+      });
       ga('send', 'pageview');
     </script>
   </body>
