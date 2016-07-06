@@ -187,7 +187,7 @@ function hasCircularReference(obj /*:Object*/) /*:bool*/ {
 
 function getAllPaths(obj /*:Object*/) /*:[[string, mixed]] */ {
   let paths /*[[string, mixed]]*/ = [];
-  function walk(o, state = []) {
+  function walk(o, state /*:[number|string]*/= []) {
     if (o && typeof o === 'object') {
       if (Array.isArray(o)) {
         for (let i = 0; i < o.length; i++) {
