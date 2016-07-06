@@ -13,6 +13,8 @@
     "babel-plugin-transform-conditionals": "^0.1.2",
     "babel-plugin-transform-dead-code-elimination": "^2.0.1",
     "babel-plugin-transform-evaluate": "^0.1.8",
+    "babel-plugin-transform-function-to-arrow": "^0.1.0",
+    "babel-plugin-transform-global-defs": "^0.1.0",
     "babel-plugin-transform-mangle": "^0.1.7",
     "babel-plugin-transform-member-expression-literals": "^6.8.0",
     "babel-plugin-transform-merge-sibling-variables": "^6.8.0",

@@ -7,6 +7,13 @@ function test(input) {
   }).code);
 }
 
+function testOpts(input) {
+  return trim(transform(input, {
+    plugins: [[functionToArrow, {keep_fnames: true}]],
+    babelrc: false
+  }).code);
+}
+
 describe('babel-plugin-transform-function-to-arrow', function () {
   it('should transform var x = function expression', function () {
     expect(
@@ -45,9 +52,17 @@ describe('babel-plugin-transform-function-to-arrow', function () {
     );
   });
 
-  it('should not transform named functions', function () {
+  it('should transform named functions by default (keep_fnames=false)', function () {
     expect(
       test('var x = function x() { return 5 }')
+    ).toEqual(
+      trim('var x = () => 5')
+    );
+  });
+
+  it('should NOT transform named functions for keep_fnames=true', function () {
+    expect(
+      testOpts('var x = function x() { return 5 }')
     ).toEqual(
       trim('var x = function x() { return 5 }')
     );

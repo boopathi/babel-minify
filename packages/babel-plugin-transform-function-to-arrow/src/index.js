@@ -1,7 +1,7 @@
 // @flow
 /*::import type {NodePath, Binding, Scope, Node, PluginOptions} from 'Babel';*/
-function isReplacable(path) {
-  if (path.get('id').node) return false;
+function isReplacable(path, keep_fnames) {
+  if (keep_fnames && path.get('id').node) return false;
   let replacable = true;
   path.traverse({
     ThisExpression() {
@@ -26,8 +26,12 @@ function isArrowReplacable(path) {
 export default function ({types: t} /*:PluginOptions*/) {
   return {
     visitor: {
-      FunctionExpression(path /*:NodePath*/) {
-        if (isReplacable(path)) {
+      FunctionExpression(path /*:NodePath*/, {
+        opts: {
+          keep_fnames = false
+        } = {}
+      } /*:FunctionToArrowOptions*/ = {}) {
+        if (isReplacable(path, keep_fnames)) {
           path.replaceWith(
             t.arrowFunctionExpression(
               path.node.params, path.node.body

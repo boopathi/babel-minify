@@ -23,10 +23,17 @@ describe('babel-minify', function() {
       evaluate: ['babel-plugin-transform-evaluate'],
       drop_debugger: ['babel-plugin-transform-remove-debugger'],
       drop_console: ['babel-plugin-transform-remove-console'],
-      properties: ['babel-plugin-transform-member-expression-literals', 'babel-plugin-transform-property-literals'],
+      properties: [
+        'babel-plugin-transform-member-expression-literals',
+        'babel-plugin-transform-property-literals'
+      ],
       join_vars: ['babel-plugin-transform-merge-sibling-variables'],
       booleans: ['babel-plugin-transform-minify-booleans'],
-      unsafe: ['babel-plugin-transform-undefined-to-void', 'babel-plugin-transform-simplify-comparison-operators'],
+      unsafe: [
+        'babel-plugin-transform-undefined-to-void',
+        'babel-plugin-transform-simplify-comparison-operators',
+        'babel-plugin-transform-function-to-arrow'
+      ]
     };
 
     function flattenPlugin(p) {

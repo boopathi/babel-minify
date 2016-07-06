@@ -23,12 +23,12 @@ https://boopathi.in/babel-minify/
 + [x] properties - [member-expression-literals](https://www.npmjs.com/package/babel-plugin-transform-member-expression-literals), [property-literals](https://www.npmjs.com/package/babel-plugin-transform-property-literals)
 + [x] [join_vars](https://www.npmjs.com/package/babel-plugin-transform-merge-sibling-variables)
 + [x] booleans - [minify booleans](https://www.npmjs.com/package/babel-plugin-transform-minify-booleans)
-+ [ ] unsafe - [undefined-to-void](https://www.npmjs.com/package/babel-plugin-transform-undefined-to-void), [simplify-comparison-operators](https://www.npmjs.com/package/babel-plugin-transform-simplify-comparison-operators)
++ [ ] unsafe - [undefined-to-void](https://www.npmjs.com/package/babel-plugin-transform-undefined-to-void), [simplify-comparison-operators](https://www.npmjs.com/package/babel-plugin-transform-simplify-comparison-operators), [function-to-arrow](https://github.com/boopathi/babel-minify/tree/master/packages/bbabel-plugin-transform-function-to-arrow)
 + [ ] sequences
 + [ ] if_return
 + [ ] cascade
 + [ ] keep_fargs
-+ [x] keep_fnames - [mangle-options](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-mangle#options)
++ [x] keep_fnames - [mangle-options](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-mangle#options), [function-to-arrow-options](https://github.com/boopathi/babel-minify/tree/master/packages/bbabel-plugin-transform-function-to-arrow#options)
 
 ## Packages overview
 

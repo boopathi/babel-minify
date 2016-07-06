@@ -13,6 +13,7 @@ declare type MinifierOptions = {
   booleans: bool,
   unsafe: bool,
   keep_fnames: bool,
+  global_defs: Object,
   npasses: number,
   babelrc: bool,
   plugins: Plugin[],
@@ -30,12 +31,18 @@ declare type MinifierOutput = string | MinifierResult
 declare type ManglerOptions = {
   opts: {
     keep_fnames: boolean,
-    mangle_globals: boolean
+    mangle_globals: boolean,
   }
 }
 
 declare type GlobalDefsOptions = {
   opts: {
     global_defs: Object,
+  }
+}
+
+declare type FunctionToArrowOptions = {
+  opts: {
+    keep_fnames: boolean,
   }
 }
