@@ -5,20 +5,23 @@ const minify = require('../packages/babel-minify');
 
 let input =
 `
-DEBUG
+if (a) {
+  console.log('hi');
+}
 `
 
-const output = babel.transform(input, {
-  babelrc: false,
-  plugins: [[plugin, {
-    global_defs: {process: {env: { A: 'hi', B: 'world'}}, DEBUG: true}
-  }]]
-}).code;
+// const output = babel.transform(input, {
+//   babelrc: false,
+//   plugins: [[plugin, {
+//     global_defs: {process: {env: { A: 'hi', B: 'world'}}, DEBUG: true}
+//   }]]
+// }).code;
 
-// const output = minify(input, {
-//   mangle_globals: true,
-//   npasses: 1,
-// });
+const output = minify(input, {
+  global_defs: {
+    a: 1
+  }
+});
 
 console.log('Input:');
 console.log(input);

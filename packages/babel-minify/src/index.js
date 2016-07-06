@@ -15,10 +15,11 @@ import minifyBooleans              from 'babel-plugin-transform-minify-booleans'
 import propertyLiterals            from 'babel-plugin-transform-property-literals';
 import simplifyComparisonOperators from 'babel-plugin-transform-simplify-comparison-operators';
 import undefinedToVoid             from 'babel-plugin-transform-undefined-to-void';
+import functionToArrow             from 'babel-plugin-transform-function-to-arrow';
+import globalDefsPlugin            from 'babel-plugin-transform-global-defs';
 
 /**
  * The main function of the minifier
- * @function
  */
 export default function BabelMinify(inputCode /*:string*/, {
   mangle         = true,
@@ -34,6 +35,9 @@ export default function BabelMinify(inputCode /*:string*/, {
   booleans       = true,
   unsafe         = true,
   keep_fnames    = false,
+
+  // global-defs
+  global_defs    = {},
 
   // number of passes
   npasses        = 1,
@@ -75,6 +79,13 @@ export default function BabelMinify(inputCode /*:string*/, {
   booleans      && minifyPlugins.push(minifyBooleans);
   unsafe        && minifyPlugins.push(undefinedToVoid);
   unsafe        && minifyPlugins.push(simplifyComparisonOperators);
+  unsafe        && minifyPlugins.push([functionToArrow, { keep_fnames }]);
+
+  if (Object.keys(global_defs).length > 0) {
+    minifyPlugins.push([globalDefsPlugin, {
+      global_defs
+    }]);
+  }
 
   /**
    * Append all user passed plugins to minifyPlugins

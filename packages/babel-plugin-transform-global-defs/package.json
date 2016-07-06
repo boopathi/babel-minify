@@ -1,5 +1,5 @@
 {
-  "name": "babel-plugin-transform-globals-defs",
+  "name": "babel-plugin-transform-global-defs",
   "version": "0.1.0",
   "description": "Transform global definitions that are available at build time",
   "main": "lib/index.js",

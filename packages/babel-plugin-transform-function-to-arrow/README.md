@@ -29,3 +29,7 @@ const z = function () {
   return arguments[0];
 }
 ```
+
+## Options
+
++ `keep_fnames`: [Default: false] Don't transform functions to arrows for FunctionExpressions with names - Useful for code depending on `fn.name`.
