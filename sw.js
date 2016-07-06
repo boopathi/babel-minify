@@ -1,6 +1,6 @@
 importScripts('build/sw-toolbox.js');
 
-toolbox.cache.name = 'babel-minify-' + 4;
+toolbox.cache.name = 'babel-minify-' + 5;
 
 toolbox.precache([
   'static/script.js',
