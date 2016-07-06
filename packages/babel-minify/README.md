@@ -66,6 +66,7 @@ Plugins used for specific options
 + mangle_globals - [mangle-options](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-mangle#options)
 + [dead_code](https://www.npmjs.com/package/babel-plugin-transform-dead-code-elimination)
 + [conditionals](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-conditionals)
++ [global_defs](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-global-defs)
 + [evaluate](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-evaluate)
 + [drop_debugger](https://www.npmjs.com/package/babel-plugin-transform-remove-debugger)
 + [drop_console](https://www.npmjs.com/package/babel-plugin-transform-remove-console)
