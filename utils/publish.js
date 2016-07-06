@@ -54,7 +54,7 @@ function runPublish(cb) {
 function run() {
   runPublish(function (err, out, update) {
     /* eslint-disable no-console */
-    console.log(update.package.name, update.package.version);
+    // console.log(update.package.name, update.package.version);
     if (err) return console.error(err.toString());
     console.log(out.toString());
     /* eslint-enable */
