@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-transform-global-defs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Transform global definitions that are available at build time",
   "main": "lib/index.js",
   "author": "boopathi",
