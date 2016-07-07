@@ -78,9 +78,7 @@ export default function ({types: t} /*:PluginOptions*/) {
   /**
    * Find if an expression is deopted.
    *
-   * An expression is deopted IF any of its sub expressions -
-   * i.e. any of the parent paths from this this expression could
-   * be reached is deopted
+   * An expression is deopted IF any of its parent paths is deopted
    *
    * eg:
    * deopts = ["a.b"];
@@ -117,7 +115,7 @@ export default function ({types: t} /*:PluginOptions*/) {
         }
 
         /**
-         * Assign to this to be accessed by other hooks
+         * Assign to globalDefs to be accessed by other hooks
          */
         globalDefs = global_defs;
 
@@ -141,11 +139,11 @@ export default function ({types: t} /*:PluginOptions*/) {
         const left = path.get('left');
 
         /**
-         * we traverse through every possibility of every path
+         * Traverse through every possibility of every path
          * obtained from the global_defs and match it with the
          * left side of the assignment, check that it's actually
          * modifying the global scoped var and not some other local
-         * or outer scoped var, and then deopt that expression.
+         * or outer scoped var, and deopt that expression.
          */
         definitions.forEach(({root, allExpr}) => {
           allExpr.forEach(expr => {
@@ -191,9 +189,8 @@ export default function ({types: t} /*:PluginOptions*/) {
       Identifier: {
         exit(path /*:NodePath*/) {
           /**
-           * Only these paths can be the possible parents,
-           * for which a global definition can be safely
-           * replaced.
+           * Only these paths can be the possible parents (of an Identifier),
+           * for which a global definition can be safely replaced.
            */
           let replaceablePaths = [
             'BinaryExpression',
@@ -219,8 +216,8 @@ export default function ({types: t} /*:PluginOptions*/) {
 
           /**
            * Since it's just an Identifier, it's enough that
-           * we traverse through all the roots of the definition
-           * determine if we can replace, and replace it in place.
+           * we traverse through all the roots of the definition,
+           * determine if we can replace, and replace it
            *
            * So, we simply filter out other expressions from global definitions
            */
@@ -241,7 +238,7 @@ export default function ({types: t} /*:PluginOptions*/) {
           /**
            * Replace all member expressions that are
            * 1. not deopted
-           * 2. not locals or vars in other scopes
+           * 2. not locals or vars in outer scopes
            */
           definitions.filter(({root, expr}) => root !== expr)
             .forEach(({root, expr, value}) => {
