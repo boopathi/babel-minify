@@ -18,12 +18,6 @@ import undefinedToVoid             from 'babel-plugin-transform-undefined-to-voi
 import functionToArrow             from 'babel-plugin-transform-function-to-arrow';
 import globalDefsPlugin            from 'babel-plugin-transform-global-defs';
 
-const deprecations = {
-  // TODO <- marking it to be removed later
-  /*global Symbol:true*/
-  npasses: Symbol('npasses is deprecated. Use passes')
-};
-
 /**
  * The main function of the minifier
  */
@@ -46,8 +40,6 @@ export default function BabelMinify(inputCode /*:string*/, {
   global_defs    = {},
 
   // number of passes
-  // TODO - DEPRECATED
-  npasses        = deprecations.npasses,
   passes         = 1,
 
   // passed on to babel transform to tell whether to use babelrc
@@ -64,18 +56,6 @@ export default function BabelMinify(inputCode /*:string*/, {
 } /*:MinifierOptions*/ = {}) /*:MinifierOutput*/ {
 
   if (typeof inputCode !== 'string' && minify) throw new Error('Invalid Input');
-
-  // TODO - DEPRECATED
-  /**
-   * Handle deprecations
-   */
-  if (npasses !== deprecations.npasses) {
-    /*eslint-disable no-console*/
-    console.warn('npasses will be deprecated. Use passes');
-    /*eslint-enable*/
-    // if default is not changed
-    if (passes === 1 && typeof npasses === 'number') passes = npasses;
-  }
 
   /**
    * The final list of plugins that are applied in babel transform
