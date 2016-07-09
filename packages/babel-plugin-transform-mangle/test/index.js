@@ -1,81 +1,142 @@
-import fs from 'fs';
-import path from 'path';
 import mangle from '../src';
 
-const babelOpts = {
-  plugins: [mangle],
-  babelrc: false,
-  comments: false
-};
-
-function getTestData(filename, babelOpts) {
-  const actualFile = path.join(__dirname, 'fixtures', `${filename}.actual.js`);
-  const expectedFile = path.join(__dirname, 'fixtures', `${filename}.expected.js`);
-  const actual = transform(String(fs.readFileSync(actualFile)), babelOpts).code;
-  const expected = String(fs.readFileSync(expectedFile));
-  return {
-    actual,
-    expected,
-    actualT: trim(actual),
-    expectedT: trim(expected)
-  };
+function test(input) {
+  return trim(transform(input, {
+    plugins: [mangle],
+    babelrc: false,
+    comments: false
+  }).code);
 }
 
-describe('babel-plugin-transform-mangle', function() {
-  it('should mangle imports', function() {
-    const {actualT, expectedT} = getTestData('imports', babelOpts);
-    expect(actualT).toEqual(expectedT);
+function testGlobals(input) {
+  return trim(transform(input, {
+    plugins: [[mangle, {
+      mangle_globals: true
+    }]],
+    babelrc: false,
+    comments: false
+  }).code);
+}
+
+function testFnames(input) {
+  return trim(transform(input, {
+    plugins: [[mangle, {
+      keep_fnames: true
+    }]],
+    babelrc: false,
+    comments: false
+  }).code);
+}
+
+// fixtures with default options
+const fixtures = {
+  dont_mangle_globals: {
+    input: '{ var someGlobalName = 0; } function blahblahblah() {}',
+    expected: '{ var someGlobalName = 0; } function blahblahblah() {}',
+  },
+  exports_and_imports: {
+    input: 'import $ from "jQuery"; export default function Blah() {}',
+    expected: 'import $ from "jQuery"; export default function Blah() {}',
+  },
+  inner_scopes: {
+    input: 'function a() { var longname = 1; var longlongname = 1 }',
+    expected: 'function a() { var b = 1; var c = 1; }',
+  },
+  nested_vars: {
+    input: `
+      (function() {
+        var longName = 1; let something = longName; const zero = something - 1;
+        { var long2Name = 2; let something = long2Name; const zero = something - 1 }
+      })();
+    `,
+    expected: `
+      (function() {
+        var a = 1; let b = a; const c = b - 1;
+        { var d = 2; let e = d; const f = e - 1; }
+      })();
+    `,
+  },
+  // https://github.com/boopathi/babel-minify/issues/11
+  global_global_vars: {
+    input: 'function foo() { var bar = 1; var baz = a + bar }',
+    expected: 'function foo() { var b = 1; var c = a + b }'
+  },
+  properties_and_methods: {
+    input: `
+      (function() {
+        class Hello { method1() {} }
+        function World() { this._world = 'earth'}
+        var foo = { bar() {}, baz: true };
+      })();
+    `,
+    expected: `
+      (function() {
+        class b { method1() {} }
+        function a() { this._world='earth' }
+        var c = { bar() {}, baz: true }
+      })();
+    `
+  },
+  // https://github.com/boopathi/babel-minify/issues/7
+  vars_in_blocks: {
+    input: 'function foo() { var bar; { var bar; function baz() {} } }',
+    expected: 'function foo() { var a; { var a; function b () {} }}'
+  }
+};
+
+describe('babel-plugin-transform-mangle', function () {
+  // fixtures
+  Object.keys(fixtures).forEach(name => {
+    it('should work for the fixture - ' + name, function () {
+      expect(
+        test(fixtures[name].input)
+      ).toEqual(
+        trim(fixtures[name].expected)
+      );
+    });
   });
 
-  it('should mangle exports and preserve names', function() {
-    const {actualT, expectedT} = getTestData('exports', babelOpts);
-    expect(actualT).toEqual(expectedT);
+  // mangle_globals
+  it('should mangle_globals when set to true', function () {
+    expect(
+      testGlobals('var foo = 1; let bar = 0; import baz from "baz"')
+    ).toEqual(
+      trim('var a = 1; let b = 0; import c from "baz"')
+    );
   });
 
-  it('should mangle nested variable declarations', function() {
-    const {actualT, expectedT} = getTestData('nested-vars', babelOpts);
-    expect(actualT).toEqual(expectedT);
+  it('should NOT treat block functions as globals', function () {
+    expect(
+      testGlobals('function foo() {} { function foo() {} } foo() ')
+    ).toEqual(
+      trim('function a() {} { function b() {} } a()')
+    );
   });
 
-  it('should not mangle property names', function() {
-    const {actualT, expectedT} = getTestData('properties-and-methods', babelOpts);
-    expect(actualT).toEqual(expectedT);
+  // keep_fnames
+  it('should preserve class names when keep_fnames is true', function () {
+    expect(
+      testFnames('function foo() { class bar {} }')
+    ).toEqual(
+      trim('function foo() { class bar{} }')
+    );
+    expect(
+      testFnames('function foo() { var bar = class bar {} }')
+    ).toEqual(
+      trim('function foo() { var a = class bar {} }')
+    );
   });
 
-  it('should not mangle function names for keep_fnames', function() {
-    const babelOpts = {
-      plugins: [[mangle, {
-        keep_fnames: true
-      }]],
-      babelrc: false
-    };
-    const {actualT, expectedT} = getTestData('keep_fnames', babelOpts);
-    expect(actualT).toEqual(expectedT);
-  });
-
-  it('should not mangle globals by default', function() {
-    const {actualT, expectedT} = getTestData('dont_mangle_globals', babelOpts);
-    expect(actualT).toEqual(expectedT);
-  });
-
-  it('should mangle_globals when set to true', function() {
-    const babelOpts = {
-      plugins: [[mangle, {
-        mangle_globals: true
-      }]],
-      babelrc: false
-    };
-    const {actualT, expectedT} = getTestData('mangle_globals', babelOpts);
-    expect(actualT).toEqual(expectedT);
-  });
-
-  it('should take care or vars in blocks', function() {
-    const {actualT, expectedT} = getTestData('vars_in_blocks', babelOpts);
-    expect(actualT).toEqual(expectedT);
-  });
-
-  it('should take care global vars and should not declare global in local scope', function() {
-    const {actualT, expectedT} = getTestData('global_vars', babelOpts);
-    expect(actualT).toEqual(expectedT);
+  it('should preserve function names when keep_fnames is true', function () {
+    expect(
+      testFnames('function foo() { function bar() {} }')
+    ).toEqual(
+      trim('function foo() { function bar() {} }')
+    );
+    expect(
+      testFnames('function foo() { var bar = { baz: function baz() {} } }')
+    ).toEqual(
+      trim('function foo() { var a = { baz: function baz() {} } }')
+    );
   });
 });
