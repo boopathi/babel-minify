@@ -14,12 +14,15 @@ function isReplacable(path, keep_fnames) {
    * then it's NOT replacable
    */
   path.traverse({
-    ThisExpression() {
-      replacable = false;
+    ThisExpression(thisPath) {
+      if (thisPath.scope === path.scope) {
+        replacable = false;
+      }
     },
     Identifier(idPath /*:NodePath*/) {
-      if (idPath.node.name === 'arguments')
+      if (idPath.node.name === 'arguments' && idPath.scope === path.scope) {
         replacable = false;
+      }
     }
   });
   return replacable;

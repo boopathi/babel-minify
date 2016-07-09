@@ -67,4 +67,17 @@ describe('babel-plugin-transform-function-to-arrow', function () {
       trim('var x = function x() { return 5 }')
     );
   });
+
+  it('should transform function where nested functions include this or arguments', function () {
+    expect(
+      test('var x = function () { var a = function () {this} }')
+    ).toEqual(
+      trim('var x = () => { var a = function() {this} }')
+    );
+    expect(
+      test('var x = function () { var a = function () {arguments} }')
+    ).toEqual(
+      trim('var x = () => { var a = function() {arguments} }')
+    );
+  });
 });
