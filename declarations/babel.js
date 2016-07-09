@@ -92,3 +92,24 @@ declare module Babel {
     value: any
   }
 }
+
+declare module 'babel-core' {
+  declare type BabelOptions = {
+    plugins: Plugin[],
+    presets: Preset[],
+    minified: bool,
+    compact: bool,
+    passPerPreset: bool,
+    comments: bool,
+    babelrc?: bool,
+    sourceMaps?: bool,
+    extends?: string,
+    env?: Object,
+  }
+
+  declare type BabelResult = {
+    code: string,
+  }
+
+  declare function transform(input: string, options: BabelOptions): BabelResult
+}

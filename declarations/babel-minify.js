@@ -14,7 +14,8 @@ declare type MinifierOptions = {
   unsafe: bool,
   keep_fnames: bool,
   global_defs: Object,
-  npasses: number,
+  npasses: any, // TODO - DEPRECATED
+  passes: number,
   babelrc: bool,
   plugins: Plugin[],
   presets: Preset[],

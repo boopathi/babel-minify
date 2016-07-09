@@ -42,7 +42,7 @@ Options and defaults
   global_defs    = {},
 
   // number of passes
-  npasses        = 1,
+  passes         = 1,
 
   // passed on to babel transform to tell whether to use babelrc
   babelrc        = false,

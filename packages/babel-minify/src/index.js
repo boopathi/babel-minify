@@ -18,6 +18,12 @@ import undefinedToVoid             from 'babel-plugin-transform-undefined-to-voi
 import functionToArrow             from 'babel-plugin-transform-function-to-arrow';
 import globalDefsPlugin            from 'babel-plugin-transform-global-defs';
 
+const deprecations = {
+  // TODO <- marking it to be removed later
+  /*global Symbol:true*/
+  npasses: Symbol('npasses is deprecated. Use passes')
+};
+
 /**
  * The main function of the minifier
  */
@@ -40,7 +46,9 @@ export default function BabelMinify(inputCode /*:string*/, {
   global_defs    = {},
 
   // number of passes
-  npasses        = 1,
+  // TODO - DEPRECATED
+  npasses        = deprecations.npasses,
+  passes         = 1,
 
   // passed on to babel transform to tell whether to use babelrc
   babelrc        = false,
@@ -57,18 +65,30 @@ export default function BabelMinify(inputCode /*:string*/, {
 
   if (typeof inputCode !== 'string' && minify) throw new Error('Invalid Input');
 
+  // TODO - DEPRECATED
+  /**
+   * Handle deprecations
+   */
+  if (npasses !== deprecations.npasses) {
+    /*eslint-disable no-console*/
+    console.warn('npasses will be deprecated. Use passes');
+    /*eslint-enable*/
+    // if default is not changed
+    if (passes === 1 && typeof npasses === 'number') passes = npasses;
+  }
+
   /**
    * The final list of plugins that are applied in babel transform
    * This is the first list that's preffered in babel transform, the plugins
    * that go into this take one pass, plugins that prefer separate passes go into
-   * the finalPresets / passes
+   * the minifyPresets
    */
   let minifyPlugins /*:Plugin[]*/ = [];
 
   /**
-   * The final list of presets that are applied in SEPARATE passes
+   * The list of presets that are applied in SEPARATE passes
    */
-  let passes /*:Preset[]*/ = [];
+  let minifyPresets /*:Preset[]*/ = [];
 
   evaluate      && minifyPlugins.push(evaluatePlugin);
   drop_debugger && minifyPlugins.push(removeDebugger);
@@ -98,16 +118,16 @@ export default function BabelMinify(inputCode /*:string*/, {
    * under separate passes
    */
   if (dead_code) {
-    passes.push({plugins: [deadCodeElimination]});
+    minifyPresets.push({plugins: [deadCodeElimination]});
   }
   if (conditionals) {
-    passes.push({plugins: [conditionalsPlugin]});
+    minifyPresets.push({plugins: [conditionalsPlugin]});
   }
 
   /**
    * Append all user passed presets to passes
    */
-  passes = passes.concat(presets);
+  minifyPresets = [...minifyPresets, ...presets];
 
   /**
    * Keep mangler to be in the last of the presets
@@ -115,7 +135,7 @@ export default function BabelMinify(inputCode /*:string*/, {
    * I just keep it as the last pass
    */
   if (mangle) {
-    passes.push({
+    minifyPresets.push({
       plugins: [
         [manglePlugin, {
           keep_fnames,
@@ -127,18 +147,18 @@ export default function BabelMinify(inputCode /*:string*/, {
 
   // if minify is false, return the plugins list to be used elsewhere
   // maybe move this to a separate file later
-  if (!minify) return { plugins: minifyPlugins, presets: passes };
+  if (!minify) return { plugins: minifyPlugins, presets: minifyPresets };
 
   let result = {code: inputCode};
 
-  while (npasses-- > 0) {
+  while (passes-- > 0) {
     result = transform(result.code, {
       babelrc,
       comments: false,
       compact: true,
       minified: true,
       passPerPreset: true,
-      presets: passes,
+      presets: minifyPresets,
       plugins: minifyPlugins
     });
   }
