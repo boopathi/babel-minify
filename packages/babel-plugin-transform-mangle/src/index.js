@@ -24,6 +24,19 @@ function renameIdentifiers(path /* :NodePath */, {
     keep_fnames = false
   } = {}
 } /*:ManglerOptions*/ = {}) {
+  let isEval = false;
+
+  path.traverse({
+    CallExpression(evalPath) {
+      const callee = evalPath.get('callee');
+      if (callee.isIdentifier() && callee.node.name === 'eval') {
+        isEval = true;
+      }
+    }
+  });
+
+  if (isEval) return;
+
   const bindings /* :Object */ = path.scope.getAllBindings();
 
   const ownBindings /* :string[] */ = Object.keys(bindings).filter(b => path.scope.hasOwnBinding(b));

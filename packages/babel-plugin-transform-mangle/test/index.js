@@ -139,4 +139,21 @@ describe('babel-plugin-transform-mangle', function () {
       trim('function foo() { var a = { baz: function baz() {} } }')
     );
   });
+
+  // eval deopt
+  it('should deopt all variables of all scopes accessible to eval', function () {
+    expect(
+      test('function baz () { var foo = 0; function bar() { eval() } }')
+    ).toEqual(
+      trim('function baz () { var foo = 0; function bar() { eval() } }')
+    );
+  });
+
+  it('should NOT deopt variables that are not accessible to eval', function () {
+    expect(
+      test('function foo () { function bar() {eval()} function baz() { var evalCantSee; }}')
+    ).toEqual(
+      trim('function foo () { function bar() {eval()} function baz() { var a; }}')
+    );
+  });
 });
