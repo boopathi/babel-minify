@@ -1,0 +1,16 @@
+{
+  "libs": [],
+  "loadEagerly": [
+    "./packages/*/src/*.js",
+    "./utils/*.js",
+    "./packages/*/test/*.js",
+    "./*.js"
+  ],
+  "plugins": {
+    "requirejs": {
+      "baseURL": "./",
+      "paths": {}
+    },
+    "es_modules": {}
+  }
+}
