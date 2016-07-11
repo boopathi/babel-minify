@@ -1,0 +1,24 @@
+{
+  "name": "babel-plugin-transform-sequences",
+  "version": "0.1.0",
+  "description": "Join consecutive simple statements using the comma operator",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-sequences"
+  },
+  "author": "Vignesh Shanmugam",
+  "license": "MIT",
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ]
+        }
+      ]
+    ]
+  }
+}
