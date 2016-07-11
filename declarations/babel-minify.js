@@ -49,3 +49,16 @@ declare type FunctionToArrowOptions = {
     keep_fnames: boolean,
   }
 }
+
+declare type CliRunnerOptions = {
+  logger: {
+    log: function,
+    error: function,
+    warn: function,
+  }
+}
+
+declare type CliTaskResult = {
+  contents: string,
+  filename: string
+}

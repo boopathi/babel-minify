@@ -1,6 +1,7 @@
 // @flow
 /*::import type {Plugin, Preset} from 'Babel';*/
 import {transform} from 'babel-core';
+import D from './defaults';
 
 // plugins
 import manglePlugin                from 'babel-plugin-transform-mangle';
@@ -22,36 +23,36 @@ import globalDefsPlugin            from 'babel-plugin-transform-global-defs';
  * The main function of the minifier
  */
 export default function BabelMinify(inputCode /*:string*/, {
-  mangle         = true,
+  mangle         = D.mangle,
 
-  dead_code      = false,
-  conditionals   = true,
-  evaluate       = true, // eval constant expressions
-  drop_debugger  = false,
-  drop_console   = false,
-  properties     = true,
-  join_vars      = true,
-  booleans       = true,
-  unsafe         = true,
-  keep_fnames    = false,
+  dead_code      = D.dead_code,
+  conditionals   = D.conditionals,
+  evaluate       = D.evaluate, // eval constant expressions
+  drop_debugger  = D.drop_debugger,
+  drop_console   = D.drop_console,
+  properties     = D.properties,
+  join_vars      = D.join_vars,
+  booleans       = D.booleans,
+  unsafe         = D.unsafe,
+  keep_fnames    = D.keep_fnames,
 
   // global-defs
-  global_defs    = {},
+  global_defs    = D.global_defs,
 
   // number of passes
-  passes         = 1,
+  passes         = D.passes,
 
   // passed on to babel transform to tell whether to use babelrc
-  babelrc        = false,
+  babelrc        = D.babelrc,
 
   // should there be any other plugins added to this build process
-  plugins        = [],
+  plugins        = D.plugins,
 
   // should there be any other presets
-  presets        = [],
+  presets        = D.presets,
 
   // if false, babel-minify can give a list of plugins to use as a preset
-  minify         = true,
+  minify         = D.minify,
 } /*:MinifierOptions*/ = {}) /*:MinifierOutput*/ {
 
   if (typeof inputCode !== 'string' && minify) throw new Error('Invalid Input');
