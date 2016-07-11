@@ -3,7 +3,6 @@
 import nameGenerator from './namegen';
 
 /**
- *
  * These entities can have a `name` property which should be preserved when
  * `keep_fnames` is true.
  *
@@ -19,11 +18,16 @@ function isFunction(binding /* :Binding */) /*:boolean*/ {
     binding.path.isClassExpression();
 }
 
-function renameIdentifiers(path /* :NodePath */, {
-  opts: {
-    keep_fnames = false
-  } = {}
-} /*:ManglerOptions*/ = {}) {
+/**
+ * Eval works in a way that, anything inside eval can access
+ * all variables in ALL of its parent scopes
+ *
+ * Also, eval cannot be changed in strict mode like - let eval = 0;
+ * So we don't have to find the data flow from the eval() expression
+ *
+ * We traverse through the path and detect any usage of eval
+ */
+function isEval(path) {
   let isEval = false;
 
   path.traverse({
@@ -35,7 +39,59 @@ function renameIdentifiers(path /* :NodePath */, {
     }
   });
 
-  if (isEval) return;
+  return isEval;
+}
+
+/**
+ * Given the predicates, filter the Exceptions from getting mangled
+ * Mangle option: except
+ */
+function isExcept(binding /*:string*/, except /*:any[]*/) /*:bool*/ {
+  for (let i = 0; i < except.length; i++) {
+    const predicate = except[i];
+
+    switch (typeof predicate) {
+      case 'string':
+        if (predicate === binding) return true;
+        break;
+
+      case 'function':
+        if (predicate(binding)) return true;
+        break;
+
+      // For regular expressions
+      case 'object':
+        if (predicate.test(binding)) return true;
+        break;
+    }
+  }
+  return false;
+}
+
+function renameIdentifiers(path /* :NodePath */, {
+  opts: {
+    keep_fnames = false,
+    eval: _eval = false,
+    except      = [],
+  } = {}
+} /*:ManglePluginOptions*/ = {}) {
+  /**
+   * Handle eval()
+   *
+   * If _eval is enabled/true, then we can mangle the names
+   * If _eval is disabled/false, then we should check for eval in sub paths
+   *
+   * new Function() works in a way such that it is restricted
+   * to access only it's variables declared in the local scope
+   * and the variables in the global scope
+   *
+   * OR
+   *
+   * the function is created in the global scope
+   *
+   * So, we don't have to worry about handling them here
+   */
+  if (!_eval && isEval(path)) return;
 
   const bindings /* :Object */ = path.scope.getAllBindings();
 
@@ -43,6 +99,11 @@ function renameIdentifiers(path /* :NodePath */, {
   const names = nameGenerator();
 
   ownBindings
+    /**
+     * Filter all except passed in from the user
+     * Don't mangle them
+     */
+    .filter(b => !isExcept(b, except))
     /**
      * If the binding is already just 1 character long,
      * there is no point in mangling - also, this saves us from expiring the
@@ -85,9 +146,23 @@ function renameIdentifiers(path /* :NodePath */, {
 export default function Mangle() {
   return {
     visitor: {
-      Program(path /*:NodePath*/, options /*:ManglerOptions*/) {
-        if (options.opts && options.opts.mangle_globals)
-          renameIdentifiers(path, options);
+      Program(path /*:NodePath*/, options /*:ManglePluginOptions*/) {
+        if (options.opts && options.opts.topLevel) {
+          let isNewFn = false;
+
+          path.traverse({
+            NewExpression(newPath) {
+              const callee = newPath.get('callee');
+              if (callee.isIdentifier() && callee.node.name === 'Function') {
+                isNewFn = true;
+              }
+            }
+          });
+
+          if (!isNewFn) {
+            renameIdentifiers(path, options);
+          }
+        }
       },
       BlockStatement: renameIdentifiers
     }

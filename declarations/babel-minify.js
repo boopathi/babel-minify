@@ -1,8 +1,7 @@
 import type {Plugin, Preset} from 'Babel';
 
 declare type MinifierOptions = {
-  mangle: bool,
-  mangle_globals: bool,
+  mangle: bool | MangleOptions,
   dead_code: bool,
   conditionals: bool,
   evaluate: bool,
@@ -21,19 +20,23 @@ declare type MinifierOptions = {
   minify: bool,
 }
 
+declare type MangleOptions = {
+  topLevel: bool,
+  eval: bool,
+  except: [string|Object|function],
+  keep_fnames: bool,
+}
+
+declare type ManglePluginOptions = {
+  opts: MangleOptions
+}
+
 declare type MinifierResult = {
   plugins: Plugin[],
   presets: Preset[]
 }
 
 declare type MinifierOutput = string | MinifierResult
-
-declare type ManglerOptions = {
-  opts: {
-    keep_fnames: boolean,
-    mangle_globals: boolean,
-  }
-}
 
 declare type GlobalDefsOptions = {
   opts: {

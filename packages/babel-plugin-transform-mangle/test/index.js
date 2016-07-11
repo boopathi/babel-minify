@@ -1,31 +1,24 @@
 import mangle from '../src';
 
-function test(input) {
+function test(input, option, optionval) {
   return trim(transform(input, {
-    plugins: [mangle],
+    plugins: void 0 !== option ? [ [ mangle, { [option]: optionval} ] ] : [mangle],
     babelrc: false,
     comments: false
   }).code);
 }
 
 function testGlobals(input) {
-  return trim(transform(input, {
-    plugins: [[mangle, {
-      mangle_globals: true
-    }]],
-    babelrc: false,
-    comments: false
-  }).code);
+  return test(input, 'topLevel', true);
 }
-
 function testFnames(input) {
-  return trim(transform(input, {
-    plugins: [[mangle, {
-      keep_fnames: true
-    }]],
-    babelrc: false,
-    comments: false
-  }).code);
+  return test(input, 'keep_fnames', true);
+}
+function testExcept(input, except) {
+  return test(input, 'except', except);
+}
+function testEval(input) {
+  return test(input, 'eval', true);
 }
 
 // fixtures with default options
@@ -154,6 +147,50 @@ describe('babel-plugin-transform-mangle', function () {
       test('function foo () { function bar() {eval()} function baz() { var evalCantSee; }}')
     ).toEqual(
       trim('function foo () { function bar() {eval()} function baz() { var a; }}')
+    );
+  });
+
+  // eval option
+  it('should Mangle names without deopt eval for eval=true', function () {
+    expect(
+      testEval('function baz () { var foo = 0; function bar() { eval() } }')
+    ).toEqual(
+      trim('function baz () { var b = 0; function a () { eval() }}')
+    );
+  });
+
+  // new Function test
+  it('should NOT mangle names when new Function is used and globals is true', function () {
+    expect(
+      testGlobals('function foo() { new Function(""); }')
+    ).toEqual(
+      trim('function foo() { new Function("") }')
+    );
+    expect(
+      test('function foo() { new Function(""); }')
+    ).toEqual(
+      trim('function foo() { new Function(""); }')
+    );
+  });
+
+  // except option tests
+  it('should NOT mangle names that are listed in except<string> option', function () {
+    expect(
+      testExcept('(function() { var foo = 1; { let bar, baz; } })()', ['bar', 'foo'])
+    ).toEqual(
+      trim('(function() { var foo = 1; { let bar, a; } })()')
+    );
+  });
+
+  // function
+  it('should NOT mangle names in except<function>', function () {
+    expect(
+      testExcept(
+        'function a() { var foobarbaz, barfoobaz, bazbarfoo, foobazbar }',
+        [ name => name.substring(3, 6) === 'bar']
+      )
+    ).toEqual(
+      trim('function a() { var foobarbaz, b, bazbarfoo, c }')
     );
   });
 });
