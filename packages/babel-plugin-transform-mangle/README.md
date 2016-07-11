@@ -1,6 +1,6 @@
 # babel-plugin-transform-mangle
 
-Mangle Identifiers that can be shortened
+Mangle Identifiers
 
 ## Install
 
@@ -37,6 +37,10 @@ function d() {
 
 ## Options
 
-+ `keep_fnames`: [Default: false] Don't mangle function names for FunctionExpressions and FunctionDeclarations - Useful for code depending on `fn.name`.
++ `keep_fnames`: [Default: false] Don't mangle function names for FunctionExpressions and FunctionDeclarations - Useful for code depending on `fn.name`
 
-+ `mangle_globals`: [Default: false] Mangle variables in the outermost scope.
++ `topLevel`: [Default: false] Mangle variables in the outermost scope
+
++ `eval`: [Default: false] Don't deopt from mangling when eval is found in the subtree
+
++ `except`: [Default: []] Pass in an array of strings or functions or RegExps to match against the variable name that is mangled. If there is a match, then that variable name will NOT be mangled.
