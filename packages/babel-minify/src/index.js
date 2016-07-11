@@ -23,7 +23,6 @@ import globalDefsPlugin            from 'babel-plugin-transform-global-defs';
  */
 export default function BabelMinify(inputCode /*:string*/, {
   mangle         = true,
-  mangle_globals = false,
 
   dead_code      = false,
   conditionals   = true,
@@ -115,12 +114,24 @@ export default function BabelMinify(inputCode /*:string*/, {
    * I just keep it as the last pass
    */
   if (mangle) {
+    let mangleOpts /*MangleOptions*/ = {};
+
+    if (typeof mangle === 'boolean') {
+      mangleOpts = {
+        keep_fnames
+      };
+    } else if (typeof mangle === 'object') {
+      /**
+       * keep_fnames in mangle overrides global keep_fnames
+       */
+      mangleOpts = mangle;
+    } else {
+      throw new TypeError('Expected an object or boolean for mangle');
+    }
+
     minifyPresets.push({
       plugins: [
-        [manglePlugin, {
-          keep_fnames,
-          mangle_globals
-        }]
+        [manglePlugin, mangleOpts]
       ]
     });
   }
