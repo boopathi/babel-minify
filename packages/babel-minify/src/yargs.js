@@ -1,5 +1,9 @@
-export default function yargsOptions(argv) {
-  return require('yargs')(argv)
+// @flow
+import yargs from 'yargs';
+/*::import type {Argv} from 'yargs'*/
+
+export default function yargsOptions() /*:Argv*/ {
+  return yargs
     .usage('$0 [options] input.js')
 
     .help('help')
@@ -96,7 +100,7 @@ export default function yargsOptions(argv) {
     .option('npasses', {
       type: 'number',
       alias: 'p',
-      'default': 1,
+      'default': undefined,
       describe: 'Number of passes - [default 1]'
     })
     .option('babelrc', {
