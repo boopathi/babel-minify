@@ -9,7 +9,7 @@
     "flow": "flow check",
     "lint": "npm run lint-src && npm run lint-test && npm run lint-others",
     "lint-src": "eslint -c .eslintrc packages/*/src packages/*/*.js",
-    "lint-test": "eslint -c utils/test.eslintrc packages/*/test --ignore-pattern '**/packages/*/test/fixtures/**'",
+    "lint-test": "eslint -c utils/test.eslintrc packages/*/test --ignore-pattern '**/packages/*/test/resources/**'",
     "lint-others": "eslint -c .eslintrc utils/ *.js",
     "gh-pages": "gulp gh-pages",
     "watch": "npm run clean && gulp watch",

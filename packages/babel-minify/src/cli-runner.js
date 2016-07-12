@@ -5,15 +5,6 @@ import path from 'path';
 import mkdirp from 'mkdirp';
 import minify from '../';
 
-function isExists(file) {
-  try {
-    fs.statSync(file);
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
 function handleFile(filename /*:string*/, options /*:MinifierOptions*/) /*:CliTaskResult*/ {
   let input = String(fs.readFileSync(filename));
   return {
@@ -22,23 +13,25 @@ function handleFile(filename /*:string*/, options /*:MinifierOptions*/) /*:CliTa
   };
 }
 
-function putFile(result /*:CliTaskResult*/, argv /*:Argv*/, opts /*CliRunnerOptions*/) {
-  if (argv._.length === 1) {
-    // then there is only one file
-    if (typeof argv.output === 'string') {
-      fs.writeFileSync(argv.output, result.contents);
-    } else {
-      opts.logger.log(result.contents);
-    }
-  } else {
-    const outputDir /*:string*/ = typeof argv.outputDir === 'string' ? argv.outputDir : '';
-    if (outputDir) {
-      const basename = path.basename(result.filename);
-      fs.writeFileSync(path.join(outputDir, basename), result.contents);
+function putFile(
+  result /*:CliTaskResult*/,
+  argv /*:Argv*/,
+  opts /*:CliRunnerOptions*/
+  /*inputFile /*:string*/
+) {
+  if (typeof argv.output === 'string') {
+    if (argv._.length === 1) {
+      fs.writeFileSync(argv.output, result.contents, 'utf-8');
     } else {
       opts.logger.error('--outputDir unspecified');
       throw new Error('--outputDir unspecified');
     }
+  } else if (typeof argv.outputDir === 'string') {
+    const {outputDir} = argv;
+    const basename = path.basename(result.filename);
+    fs.writeFileSync(path.join(outputDir, basename), result.contents, 'utf-8');
+  } else {
+    opts.logger.log(result.contents);
   }
 }
 
@@ -60,14 +53,24 @@ function handleDir(dir /*:string*/, options /*:MinifierOptions*/) /*:CliTaskResu
   return files.map(filename => handleFile(filename, options));
 }
 
-function putDir(results /*:CliTaskResult[]*/, argv /*:Argv*/, opts /*:CliRunnerOptions*/) {
+function putDir(
+  results /*:CliTaskResult[]*/,
+  argv /*:Argv*/,
+  opts /*:CliRunnerOptions*/,
+  inputDir /*:string*/
+) {
   const outputDir /*:string*/ = typeof argv.outputDir === 'string' ? argv.outputDir : '';
   if (outputDir) {
     results.forEach(result => {
-      const outfile = path.join(outputDir, result.filename);
+      const inputfile = path.resolve(path.join('./', result.filename));
+      const inputDirAbs = path.resolve(path.join('./', inputDir));
+      const relativePath = inputfile.replace(inputDirAbs, '');
+
+      const outfile = path.join(outputDir, relativePath);
       const dirname = path.dirname(outfile);
+
       mkdirp.sync(dirname);
-      fs.writeFileSync(outfile, result.contents);
+      fs.writeFileSync(outfile, result.contents, 'utf-8');
     });
   } else {
     opts.logger.error('--outputDir unspecified');
@@ -80,10 +83,10 @@ export default function minifyAndOutput(argv /*:Argv*/, opts /*:CliRunnerOptions
     .forEach(file => {
       if (fs.statSync(file).isDirectory()) {
         let results = handleDir(file, argv);
-        putDir(results, argv, opts);
+        putDir(results, argv, opts, file);
       } else {
         let result = handleFile(file, argv);
-        putFile(result, argv, opts);
+        putFile(result, argv, opts, file);
       }
     });
 }
