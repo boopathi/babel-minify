@@ -11,7 +11,9 @@ function run(argvRaw /*:string[]*/, opts /*:CliRunnerOptions*/) {
 
 module.exports = run;
 
-// I don't know why I'm doing this
+// Just so I can test simply by importing it
+// and not having to mess around child_process
+// which also turns out to be really slow for tests
 if ((require.main /*:any*/) === module) {
   run(process.argv.slice(2), {
     logger: console
