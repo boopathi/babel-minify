@@ -39,6 +39,12 @@ export default function BabelMinify(inputCode /*:string*/, {
   // global-defs
   global_defs    = D.global_defs,
 
+  // source maps
+  sourceMaps     = D.sourceMaps,
+
+  // input sourcemap
+  inputSourceMap = D.inputSourceMap,
+
   // number of passes
   passes         = D.passes,
 
@@ -141,7 +147,11 @@ export default function BabelMinify(inputCode /*:string*/, {
   // maybe move this to a separate file later
   if (!minify) return { plugins: minifyPlugins, presets: minifyPresets };
 
-  let result = {code: inputCode};
+  let result /*BabelResult*/ = {
+    code: inputCode,
+    map: inputSourceMap,
+    toString() {}
+  };
 
   while (passes-- > 0) {
     result = transform(result.code, {
@@ -151,9 +161,13 @@ export default function BabelMinify(inputCode /*:string*/, {
       minified: true,
       passPerPreset: true,
       presets: minifyPresets,
-      plugins: minifyPlugins
+      plugins: minifyPlugins,
+      sourceMaps,
+      inputSourceMap: result.map
     });
   }
 
-  return result.code;
+  result.toString = () => result.code;
+
+  return result;
 }

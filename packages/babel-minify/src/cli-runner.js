@@ -3,14 +3,12 @@
 import fs from 'fs';
 import path from 'path';
 import mkdirp from 'mkdirp';
-import minify from '../';
+import minify from './';
 
 function handleFile(filename /*:string*/, options /*:MinifierOptions*/) /*:CliTaskResult*/ {
-  let input = String(fs.readFileSync(filename));
-  return {
-    contents: minify(input, options),
-    filename
-  };
+  const input = String(fs.readFileSync(filename));
+  const contents = minify(input, options).toString();
+  return { contents, filename };
 }
 
 function putFile(

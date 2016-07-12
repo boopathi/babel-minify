@@ -75,4 +75,17 @@ describe('babel-minify', function() {
       });
     });
   });
+
+  it('should return a babel result', function () {
+    const result = minify('function a() { var foo; }');
+    expect(result.code).toBeA('string');
+    expect(result.toString()).toEqual(result.code);
+  });
+
+  it('should contain sourcemaps', function () {
+    const result = minify('function a() { var foo; }', {sourceMaps: true});
+    expect(result.code).toBeA('string');
+    expect(result.map).toBeAn('object');
+    expect(result.map.mappings).toBeA('string');
+  });
 });

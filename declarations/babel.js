@@ -103,12 +103,15 @@ declare module 'babel-core' {
     comments: bool,
     babelrc?: bool,
     sourceMaps?: bool,
+    inputSourceMaps?: Object | null,
     extends?: string,
     env?: Object,
   }
 
   declare type BabelResult = {
     code: string,
+    map?: Object | null,
+    toString() :string,
   }
 
   declare function transform(input: string, options: BabelOptions): BabelResult

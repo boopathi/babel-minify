@@ -1,4 +1,4 @@
-import type {Plugin, Preset} from 'Babel';
+import type {Plugin, Preset, BabelResult} from 'Babel';
 
 declare type MinifierOptions = {
   mangle: bool | MangleOptions,
@@ -18,6 +18,9 @@ declare type MinifierOptions = {
   plugins: Plugin[],
   presets: Preset[],
   minify: bool,
+
+  sourceMaps: boolean,
+  inputSourceMap: Object | null,
 }
 
 declare type MangleOptions = {
@@ -33,10 +36,12 @@ declare type ManglePluginOptions = {
 
 declare type MinifierResult = {
   plugins: Plugin[],
-  presets: Preset[]
+  presets: Preset[],
+  code?: string,
+  sourceMap?: string,
 }
 
-declare type MinifierOutput = string | MinifierResult
+declare type MinifierOutput = BabelResult | MinifierResult
 
 declare type GlobalDefsOptions = {
   opts: {
