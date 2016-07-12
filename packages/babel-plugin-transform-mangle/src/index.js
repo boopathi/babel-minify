@@ -81,15 +81,8 @@ function renameIdentifiers(path /* :NodePath */, {
    * If _eval is enabled/true, then we can mangle the names
    * If _eval is disabled/false, then we should check for eval in sub paths
    *
-   * new Function() works in a way such that it is restricted
-   * to access only it's variables declared in the local scope
-   * and the variables in the global scope
-   *
-   * OR
-   *
-   * the function is created in the global scope
-   *
-   * So, we don't have to worry about handling them here
+   * We don't have to worry about handling new Function() here as
+   * they are bound in global scope
    */
   if (!_eval && isEval(path)) return;
 
@@ -148,6 +141,15 @@ export default function Mangle() {
     visitor: {
       Program(path /*:NodePath*/, options /*:ManglePluginOptions*/) {
         if (options.opts && options.opts.topLevel) {
+          /**
+           * new Function() works in a way such that it is restricted
+           * to access only it's variables declared in the local scope
+           * and the variables in the global scope
+           *
+           * OR
+           *
+           * the function is created in the global scope
+           */
           let isNewFn = false;
 
           path.traverse({
