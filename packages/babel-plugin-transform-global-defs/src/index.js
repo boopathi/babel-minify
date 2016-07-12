@@ -123,36 +123,24 @@ export default function ({types: t} /*:PluginOptions*/) {
          * modifying the global scoped var and not some other local
          * or outer scoped var, and deopt that expression.
          */
-        definitions.forEach(({root, allExpr}) => {
+        for (let {root, allExpr} of definitions) {
+          if (path.scope.hasBinding(root) || !path.scope.hasGlobal(root)) return;
 
-          allExpr.forEach(expr => {
-            let match = false;
-
-            if (left.isIdentifier()) {
-              /**
-               * process = "blah";
-               */
-              if (left.node.name === expr) {
-                match = true;
-              }
-            } else if (left.isMemberExpression()) {
-              /**
-               * process.env.NODE_ENV = "development";
-               */
-              if (left.matchesPattern(expr)) {
-                match = true;
-              }
+          for (let subexpr of allExpr) {
+            /**
+             * process = "blah";
+             */
+            if (left.isIdentifier() && left.node.name === subexpr) {
+              return deopt(subexpr);
             }
-
-            if (!path.scope.hasBinding(root)
-              && path.scope.hasGlobal(root)
-              && match
-              && !isDeopt(expr)
-            ) {
-              deopt(expr);
+            /**
+             * process.env.NODE_ENV = "development";
+             */
+            else if (left.isMemberExpression() && left.matchesPattern(subexpr)) {
+              return deopt(subexpr);
             }
-          });
-        });
+          }
+        }
       },
 
       Identifier: {
@@ -190,15 +178,14 @@ export default function ({types: t} /*:PluginOptions*/) {
            *
            * So, we simply filter out other expressions from global definitions
            */
-          definitions.filter(({root, expr}) => root === expr)
-            .forEach(({root, value}) => {
-              if (!path.scope.hasBinding(root)
-                && path.scope.hasGlobal(root)
-                && !isDeopt(root)
-              ) {
-                path.replaceWith(t.valueToNode(value));
-              }
-            });
+          const {scope} = path;
+          for (let {root, expr, value} of definitions) {
+            if (root !== expr) continue;
+
+            if (!scope.hasBinding(root) && scope.hasGlobal(root) && !isDeopt(root)) {
+              path.replaceWith(t.valueToNode(value));
+            }
+          }
         }
       },
 
@@ -209,16 +196,14 @@ export default function ({types: t} /*:PluginOptions*/) {
            * 1. not deopted
            * 2. not locals or vars in outer scopes
            */
-          definitions.filter(({root, expr}) => root !== expr)
-            .forEach(({root, expr, value, allExpr}) => {
-              if (path.matchesPattern(expr)
-                && !path.scope.hasBinding(root)
-                && path.scope.hasGlobal(root)
-                && !isDeopt(allExpr)
-              ) {
-                path.replaceWith(t.valueToNode(value));
-              }
-            });
+          const {scope} = path;
+          for (let {root, expr, value, allExpr} of definitions) {
+            if (root === expr) continue;
+
+            if (path.matchesPattern(expr) && !scope.hasBinding(root) && scope.hasGlobal(root) && !isDeopt(allExpr)) {
+              path.replaceWith(t.valueToNode(value));
+            }
+          }
         }
       }
     }
