@@ -13,8 +13,10 @@ npm install babel-plugin-transform-global-defs
 ```json
 {
   "global_defs": {
-    "process.env": {
-      "NODE_ENV": "production"
+    "process": {
+      "env": {
+        "NODE_ENV": "production"
+      }
     }
   }
 }
