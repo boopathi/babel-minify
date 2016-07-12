@@ -63,7 +63,7 @@ Options and defaults
 Plugins used for specific options
 
 + [mangle](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-mangle)
-+ [x] [mangle-options](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-mangle#options) - Pass in a boolean to enable(defaults)/disable or pass in an object with these options
++ [mangle-options](https://github.com/boopathi/babel-minify/tree/master/packages/babel-plugin-transform-mangle#options) - Pass in a boolean to enable(defaults)/disable or pass in an object with these options
   + `keep_fnames`: [Default: false] Don't mangle function names for FunctionExpressions and FunctionDeclarations - Useful for code depending on `fn.name`. Note - This overrides keep_fnames in the global options (look below)
   + `topLevel`: [Default: false] Mangle variables in the outermost scope
   + `eval`: [Default: false] Don't deopt from mangling when eval is found in the subtree
