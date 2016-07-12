@@ -24,7 +24,7 @@ npm install
 Bootstrap packages and links them. This project uses [lerna](https://github.com/lerna/lerna) and you can read more about what bootstrap means here - https://github.com/lerna/lerna#bootstrap
 
 ```sh
-`npm bin`/lerna bootstrap
+npm run bootstrap
 ```
 
 ## Build
@@ -41,9 +41,36 @@ To do incremental builds on file change, start the watch process,
 npm run watch
 ```
 
+## Lint
+
+```sh
+npm run lint
+```
+
+### eslint
+
++ config for sources `packages/*/src/*.js` - [`.eslintrc`](.eslintrc)
++ config for tests `packages/*/test/*.js` - [`test.eslintrc`](utils/test.eslintrc)
+
+## Flow
+
+Flow annotations are used in comments (https://flowtype.org/blog/2015/02/20/Flow-Comments.html)
+
+```sh
+npm run flow
+```
+
+Declarations for libraries are here in this directory - [declarations](declarations)
+
 ## Test
 
 ```sh
 # Runs test for all packages
 npm test
+```
+
+To test individual packages, use `TEST_GREP` env to provide a GREP string. All the tests are titled with their respective package names. So, to test just the package `babel-plugin-transform-mangle`,
+
+```sh
+TEST_GREP=mangle npm test
 ```
