@@ -132,4 +132,23 @@ describe('babel-plugin-transform-global-defs', function () {
       trim('function a(DEBUG) {}; true;')
     );
   });
+
+  it('should Throw for circular references', function () {
+    const a = {};
+    a.b = a;
+    expect(
+      () => test('a', a)
+    ).toThrow();
+  });
+
+  it('should NOT replace sub expressions of Member Expressions', function () {
+    expect(
+      test(
+        'function a() { DEBUG.process.env.DEBUG }',
+        { process: { env: { DEBUG: 'dev' } } }
+      )
+    ).toEqual(
+      trim('function a() { DEBUG.process.env.DEBUG }')
+    );
+  });
 });

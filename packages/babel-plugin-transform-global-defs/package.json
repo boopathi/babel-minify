@@ -18,5 +18,9 @@
         }
       ]
     ]
+  },
+  "dependencies": {
+    "lodash.isobjectlike": "^4.0.0",
+    "lodash.isplainobject": "^4.0.4"
   }
 }

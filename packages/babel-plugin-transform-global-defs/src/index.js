@@ -1,5 +1,18 @@
 // @flow
 /*::import type {NodePath, Binding, Scope, Node, PluginOptions} from 'Babel';*/
+
+import isPlainObject from 'lodash.isplainobject';
+import isObjectLike from 'lodash.isobjectlike';
+
+/*::type RawDefinition = [string, mixed]*/
+
+/*::type Definition = {
+  expr: string,
+  value: mixed,
+  allExpr: string[],
+  root: string,
+}*/
+
 export default function ({types: t} /*:PluginOptions*/) {
   /**
    * A plugin wide reference to the globalDefs passed from the user
@@ -14,56 +27,33 @@ export default function ({types: t} /*:PluginOptions*/) {
    * eg: a.b.c.d (or) a.b
    * which means all sub-paths of this path are deopted
    */
-  let deopts /*:string[]*/ = [];
+  let deopts = new Set();
 
   /**
-   * A store of definitions of all paths of the globalDefs
-   * eg: for an object that is
-   * globalDefs = {
-   *   process: { env: { DEBUG: true, TEST: false } }
-   * }
-   * =>
-   * [
-   *   ["process", "env", "DEBUG", true],
-   *   ["process", "env", "DEBUG", false]
-   * ]
-   */
-  let _definitions /*:[[string, mixed]]*/ = [];
-
-  /**
-   * A useful conversion of the above definitions into some
-   * Object form
+   * A defintion is a modified form of globalDefs giving access
+   * to all the paths of the object
    *
-   * For the same example as mentioned above,
+   * For example,
+   *
+   * global_defs = { a: { b: true, c: 50 } }
+   *
+   * definitions =
    * [
    *   {
-   *     root: "process",
-   *     expr: "process.env.DEBUG",
+   *     root: "a",
+   *     expr: "a.b",
    *     value: true,
-   *     allExpr: [
-   *       "process",
-   *       "process.env",
-   *       "process.env.DEBUG"
-   *     ]
+   *     allExpr: [ "a", "a.b" ]
    *   },
    *   {
-   *     root: "process",
-   *     expr: "process.env.TEST",
-   *     value: true,
-   *     allExpr: [
-   *       "process",
-   *       "process.env",
-   *       "process.env.TEST"
-   *     ]
+   *     root: "a",
+   *     expr: "a.c",
+   *     value: 50,
+   *     allExpr: [ "a", "a.c" ]
    *   }
    * ]
    */
-  let definitions /*:[{
-    root:string,
-    expr: string,
-    value: mixed,
-    allExpr: [string]
-  }]*/= [];
+  let definitions /*:Definition[]*/= [];
 
   /**
    * deopts the expression,
@@ -72,7 +62,7 @@ export default function ({types: t} /*:PluginOptions*/) {
   function deopt(expr /*:string*/) {
     // debug
     // console.log('deopting', expr);
-    deopts.push(expr);
+    deopts.add(expr);
   }
 
   /**
@@ -84,9 +74,10 @@ export default function ({types: t} /*:PluginOptions*/) {
    * deopts = ["a.b"];
    * isDeopt("a.b.c") //=> true
    */
-  function isDeopt(expr /*:string*/) /*:bool*/{
-    for (let i = 0; i < deopts.length; i++) {
-      if (expr.indexOf(deopts[i]) !== -1) {
+  function isDeopt(_expr /*:string|[string]*/) /*:bool*/{
+    let expr = Array.isArray(_expr) ? _expr : [_expr];
+    for (let subexpr of expr) {
+      if (deopts.has(subexpr)) {
         return true;
       }
     }
@@ -103,15 +94,8 @@ export default function ({types: t} /*:PluginOptions*/) {
         /**
          * validate it's a plain object
          */
-        if (!global_defs || typeof global_defs !== 'object' || Array.isArray(global_defs)) {
+        if (!isPlainObject(global_defs)) {
           throw new Error('global_defs must be a Plain Object');
-        }
-
-        /**
-         * validate that there are no circular references
-         */
-        if (hasCircularReference(global_defs)) {
-          throw new Error('global_defs has a circular referece');
         }
 
         /**
@@ -121,15 +105,9 @@ export default function ({types: t} /*:PluginOptions*/) {
 
         // !important
         // flush the deopts, otherwise it is preserved in memory
-        deopts = [];
+        deopts = new Set();
 
-        _definitions = getAllPaths(globalDefs);
-        definitions = _definitions.map(defn => {
-          const root /*:string*/ = defn[0];
-          const {expr, value} = getExpressionFromPath(defn);
-          const allExpr = getAllExpressionsFromPath(defn);
-          return {root, expr, value, allExpr};
-        });
+        definitions = objectToPaths(globalDefs).map(p => pathToDefn(p));
       },
 
       // TODO
@@ -146,6 +124,7 @@ export default function ({types: t} /*:PluginOptions*/) {
          * or outer scoped var, and deopt that expression.
          */
         definitions.forEach(({root, allExpr}) => {
+
           allExpr.forEach(expr => {
             let match = false;
 
@@ -164,16 +143,6 @@ export default function ({types: t} /*:PluginOptions*/) {
                 match = true;
               }
             }
-
-            // debug
-            // if (match) {
-            //   console.log(
-            //     "AssignmentExpression",
-            //     !path.scope.hasBinding(root),
-            //     path.scope.hasGlobal(root),
-            //     isDeopt(expr)
-            //   );
-            // }
 
             if (!path.scope.hasBinding(root)
               && path.scope.hasGlobal(root)
@@ -241,20 +210,11 @@ export default function ({types: t} /*:PluginOptions*/) {
            * 2. not locals or vars in outer scopes
            */
           definitions.filter(({root, expr}) => root !== expr)
-            .forEach(({root, expr, value}) => {
-              // debug
-              // if (path.matchesPattern(expr)) {
-              //   console.log(
-              //     !path.scope.hasBinding(root)
-              //     , path.scope.hasGlobal(root)
-              //     , !isDeopt(expr)
-              //   );
-              // }
-
+            .forEach(({root, expr, value, allExpr}) => {
               if (path.matchesPattern(expr)
                 && !path.scope.hasBinding(root)
                 && path.scope.hasGlobal(root)
-                && !isDeopt(expr)
+                && !isDeopt(allExpr)
               ) {
                 path.replaceWith(t.valueToNode(value));
               }
@@ -266,29 +226,48 @@ export default function ({types: t} /*:PluginOptions*/) {
 }
 
 /**
- * Determine if an object has a circular reference.
- * Since we calculate all possible paths that can be taken
- * in the object, we need this property in global_defs
+ * Converts an expression in the form of array to dot notation and a value
+ *
+ * in  => ['a', 'b', true]
+ * out => {
+ *   expr: 'a.b',
+ *   value: true,
+ *   allExpr: ['a', 'a.b'],
+ *   root: 'a'
+ * }
  */
-function hasCircularReference(obj /*:Object*/) /*:bool*/ {
-  let visited = [];
-  function walk(o) {
-    if (o && typeof o === 'object') {
-      if (visited.indexOf(o) !== -1) {
-        return true;
-      }
-      visited.push(o);
-      for (let key in o) {
-        if (Object.hasOwnProperty.call(o, key) && walk(o[key])) {
-          // debug
-          // console.log('CircularReference at ' + key);
-          return true;
-        }
-      }
-    }
-    return false;
+function pathToDefn(path /*:RawDefinition*/) /*:Definition*/ {
+  let _expr = [...path], possibilities = [];
+  const value /*:mixed*/ = _expr.pop();
+
+  for (let i = 0; i < _expr.length; i++) {
+    possibilities.push(_expr.slice(0, i+1));
   }
-  return walk(obj);
+
+  return {
+    expr: exprToString(_expr),
+    allExpr: possibilities.map(e => exprToString(e)),
+    root: path[0],
+    value
+  };
+}
+
+/**
+ * Converts an expression represented in the form of array to dot notation
+ *
+ * in  => ['a', 'b', 'c', 0, 'd']
+ * out => 'a.b.c[0].d'
+ */
+function exprToString(expr /*:RawDefinition*/) /*:string*/ {
+  return expr.reduce((p, c) => {
+    if (typeof c === 'number') {
+      return  `${p}[${c}]`;
+    } else if (typeof c === 'string') {
+      return p ? p + '.' +c : c;
+    } else {
+      throw new TypeError('Somehow value of expression came in to expression');
+    }
+  }, '');
 }
 
 /**
@@ -304,77 +283,38 @@ function hasCircularReference(obj /*:Object*/) /*:bool*/ {
  *   ['b', 'b', 3]
  * ]
  */
-function getAllPaths(obj /*:Object*/) /*:[[string, mixed]] */ {
-  let paths /*[[string, mixed]]*/ = [];
+function objectToPaths(obj /*:Object*/) /*:RawDefinition[] */ {
+  // To detect circular references
+  let visited = new Set();
+
+  let paths /*RawDefinition[]*/ = [];
+
   function walk(o, state /*:[number|string]*/= []) {
-    if (o && typeof o === 'object') {
-      if (Array.isArray(o)) {
-        for (let i = 0; i < o.length; i++) {
-          walk(o[i], [...state, i]);
-        }
-      } else {
-        for (let key in o) {
-          if (Object.hasOwnProperty.call(o, key)) {
-            walk(o[key], [...state, key]);
-          }
-        }
+    // detect cyclic references
+    if (isObjectLike(o)) {
+      if (visited.has(o)) {
+        throw new Error('Circular reference in global_defs not supported');
       }
+      visited.add(o);
+    }
+
+    // traverse
+    if (Array.isArray(o)) {
+      for (let i = 0; i < o.length; i++) {
+        walk(o[i], [...state, i]);
+      }
+    } else if (isPlainObject(o)) {
+      const keys = Object.keys(o);
+      for (let key of keys) {
+        walk(o[key], [...state, key]);
+      }
+    } else if (isObjectLike(o)) {
+      throw new TypeError('No support for Object like things' + o.toString());
     } else {
       paths.push([...state, o]);
     }
   }
+
   walk(obj);
   return paths;
-}
-
-/**
- * Converts an expression represented in the form of array to dot notation
- *
- * in  => ['a', 'b', 'c', 0, 'd']
- * out => 'a.b.c[0].d'
- */
-function exprToString(expr /*:[string, mixed]*/) /*:string*/ {
-  return expr.reduce((p, c) => {
-    if (typeof c === 'number') {
-      return  `${p}[${c}]`;
-    } else if (typeof c === 'string') {
-      return p ? p + '.' +c : c;
-    } else {
-      throw new TypeError('Somehow value of expression came in to expression');
-    }
-  }, '');
-}
-
-/**
- * Converts an expression in the form of array to dot notation and a value
- *
- * in  => ['a', 'b', true]
- * out => { expr: 'a.b', value: true }
- */
-function getExpressionFromPath(path /*:[string, mixed]*/) /*:{expr: string, value: mixed}*/ {
-  let _expr = [...path];
-  const value /*:mixed*/ = _expr.pop();
-  let expr = exprToString(_expr);
-  return {expr, value};
-}
-
-/**
- * Finds all possible parent paths for a particular expression.
- * Leaves out the value part
- *
- * in  => ['a', 'b', 'c', true]
- * out => [
- *   'a',
- *   'a.b',
- *   'a.b.c'
- * ]
- */
-function getAllExpressionsFromPath(path /*:[string, mixed]*/) /*:string[]*/ {
-  let _expr = [...path];
-  _expr.pop(); // remove value
-  let possibilities = [];
-  for (let i = 0; i < _expr.length; i++) {
-    possibilities.push(_expr.slice(0, i+1));
-  }
-  return possibilities.map(e => exprToString(e));
 }
