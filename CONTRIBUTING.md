@@ -41,18 +41,16 @@ To do incremental builds on file change, start the watch process,
 npm run watch
 ```
 
-## Lint
+## Lint - eslint
 
 ```sh
 npm run lint
 ```
 
-### eslint
-
 + config for sources `packages/*/src/*.js` - [`.eslintrc`](.eslintrc)
 + config for tests `packages/*/test/*.js` - [`test.eslintrc`](utils/test.eslintrc)
 
-## Flow
+## Type check - flow
 
 Flow annotations are used in comments (https://flowtype.org/blog/2015/02/20/Flow-Comments.html)
 
