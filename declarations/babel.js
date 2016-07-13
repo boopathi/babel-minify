@@ -36,6 +36,7 @@ declare module Babel {
     name: string,
     params: any,
     argument: Node,
+    id: Object,
   }
 
   declare class NodePath {
