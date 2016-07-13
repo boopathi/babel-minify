@@ -1,24 +1,24 @@
 import mangle from '../src';
 
-function test(input, option, optionval) {
+function test(input, options) {
   return trim(transform(input, {
-    plugins: void 0 !== option ? [ [ mangle, { [option]: optionval} ] ] : [mangle],
+    plugins: void 0 !== options ? [ [ mangle, options ] ] : [mangle],
     babelrc: false,
     comments: false
   }).code);
 }
 
 function testGlobals(input) {
-  return test(input, 'topLevel', true);
+  return test(input, { topLevel: true });
 }
 function testFnames(input) {
-  return test(input, 'keep_fnames', true);
+  return test(input, { keep_fnames: true });
 }
 function testExcept(input, except) {
-  return test(input, 'except', except);
+  return test(input, { except });
 }
 function testEval(input) {
-  return test(input, 'eval', true);
+  return test(input, { eval: true });
 }
 
 // fixtures with default options
@@ -201,6 +201,32 @@ describe('babel-plugin-transform-mangle', function () {
       test('(function() { var bar = 10; var foo = eval; foo("") })()')
     ).toEqual(
       trim('(function() { var a = 10; var b = eval; b("") })()')
+    );
+  });
+
+  // combinations
+  // Globals with INDIRECT EVAL
+  it('mangle topLevel with indirect eval', function () {
+    expect(
+      testGlobals('var foo, bar; var baz = eval')
+    ).toEqual(
+      trim('var foo, bar; var baz = eval')
+    );
+  });
+
+  it('mangle topLevel with indirect eval and eval=true', function () {
+    expect(
+      test('var foo, bar; var baz = eval', { topLevel: true, eval: true })
+    ).toEqual(
+      trim('var a, b; var c = eval')
+    );
+  });
+
+  it('indirect eval with inner level', function () {
+    expect(
+      testGlobals('var foo; (function(){ var bar, baz = eval })()')
+    ).toEqual(
+      trim('var foo; (function() { var a, b = eval})()')
     );
   });
 

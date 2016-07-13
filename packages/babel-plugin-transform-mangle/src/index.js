@@ -28,18 +28,33 @@ function isFunction(binding /* :Binding */) /*:boolean*/ {
  * We traverse through the path and detect any usage of eval
  */
 function isEval(path) {
-  let isEval = false;
+  const evalPaths = new Set();
+  const result = {
+    direct: false,
+    indirect: false
+  };
 
   path.traverse({
+    /**
+     * Traversal enter enters the CallExpression first
+     */
     CallExpression(evalPath) {
       const callee = evalPath.get('callee');
       if (callee.isIdentifier() && callee.node.name === 'eval') {
-        isEval = true;
+        result.direct = true;
+        evalPaths.add(callee);
+      }
+    },
+    Identifier(evalPath) {
+      if (evalPath.node.name === 'eval') {
+        if (!evalPaths.has(evalPath)) {
+          result.indirect = true;
+        }
       }
     }
   });
 
-  return isEval;
+  return result;
 }
 
 /**
@@ -76,7 +91,7 @@ function renameIdentifiers(path /* :NodePath */, {
   } = {}
 } /*:ManglePluginOptions*/ = {}) {
   /**
-   * Handle eval()
+   * Handle eval() - Direct calls
    *
    * If _eval is enabled/true, then we can mangle the names
    * If _eval is disabled/false, then we should check for eval in sub paths
@@ -84,7 +99,7 @@ function renameIdentifiers(path /* :NodePath */, {
    * We don't have to worry about handling new Function() here as
    * they are bound in global scope
    */
-  if (!_eval && isEval(path)) return;
+  if (!_eval && isEval(path).direct) return;
 
   const bindings /* :Object */ = path.scope.getAllBindings();
 
@@ -142,6 +157,15 @@ export default function Mangle() {
       Program(path /*:NodePath*/, options /*:ManglePluginOptions*/) {
         if (options.opts && options.opts.topLevel) {
           /**
+           * If we have a winner, we don't care whether we use
+           * indirect eval or direct eval or new Function etc...
+           */
+          if (options.opts.eval) {
+            renameIdentifiers(path, options);
+            return;
+          }
+
+          /**
            * new Function() works in a way such that it is restricted
            * to access only it's variables declared in the local scope
            * and the variables in the global scope
@@ -161,7 +185,9 @@ export default function Mangle() {
             }
           });
 
-          if (!isNewFn) {
+          let isIndirectEval = isEval(path).indirect;
+
+          if (!isNewFn && !isIndirectEval) {
             renameIdentifiers(path, options);
           }
         }
