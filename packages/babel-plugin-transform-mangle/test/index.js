@@ -193,4 +193,22 @@ describe('babel-plugin-transform-mangle', function () {
       trim('function a() { var foobarbaz, b, bazbarfoo, c }')
     );
   });
+
+  // INDIRECT EVAL
+  // https://github.com/boopathi/babel-minify/issues/31
+  it('should mangle names when indirect eval is used', function () {
+    expect(
+      test('(function() { var bar = 10; var foo = eval; foo("") })()')
+    ).toEqual(
+      trim('(function() { var a = 10; var b = eval; b("") })()')
+    );
+  });
+
+  it('should mangle names when the common pattern indirect eval is used', function () {
+    expect(
+      test('(() => { var foo = "hello"; var bar = (1, eval)("this") })()')
+    ).toEqual(
+      trim('(() => { var a = "hello"; var b = (1, eval)("this")})()')
+    );
+  });
 });
