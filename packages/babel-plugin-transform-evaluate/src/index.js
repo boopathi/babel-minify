@@ -95,57 +95,6 @@ export default function Evaluate({types: t} /*:PluginOptions*/) {
             }
           });
         }
-      },
-
-      AssignmentExpression(path /*:NodePath*/) {
-        /**
-         * Deopt bindings from the left side of the assignemnt expressions
-         * babel, already does this.
-         *
-         * I still get some code that gets deopted here,
-         * so I'm keeping it here.
-         *
-         * Can we simply remove it?
-         */
-        const left = path.get('left');
-        if (!left.isIdentifier()) return;
-
-        const binding = path.scope.getBinding(left.node.name);
-        if (!binding || binding.hasDeoptedValue) return;
-
-        const evaluated = path.get('right').evaluate();
-        if (evaluated.confident) {
-          binding.setValue(evaluated.value);
-        } else {
-          binding.deoptValue();
-        }
-      },
-
-      Scopable: {
-        enter(path /*:NodePath*/) {
-          /**
-           * We take all the bindings that are in a scope,
-           * we check for constant violations and deopt those bindings,
-           * that contain constant violations
-           *
-           * Again, babel already does this.
-           *
-           * Can we simply remove it?
-           */
-          for (let name in path.scope.bindings) {
-            const binding = path.scope.bindings[name];
-
-            if (binding.constantViolations.length > 0) {
-              binding.deoptValue();
-            }
-          }
-        },
-        exit(path /*:NodePath*/) {
-          for (let name in path.scope.bindings) {
-            const binding = path.scope.bindings[name];
-            binding.clearValue();
-          }
-        }
       }
     }
   };
