@@ -5,3 +5,4 @@ lib
 lerna-debug.log*
 build
 .vscode
+.DS_Store
