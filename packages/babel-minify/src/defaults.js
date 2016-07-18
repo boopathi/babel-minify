@@ -1,5 +1,5 @@
 // @flow
-export default {
+const D /*:MinifierOptions*/ = {
   mangle          : true,
 
   dead_code       : false,
@@ -36,11 +36,13 @@ export default {
 
   // if false, babel-minify can give a list of plugins to use as a preset
   minify          : true,
-}
+};
 
-export const mangleDefaults = {
+export default D;
+
+export const mangleDefaults /*:MangleOptions*/ = {
   keep_fnames     : false,
   eval            : false,
-  except          : false,
+  except          : [],
   topLevel        : false,
 }
