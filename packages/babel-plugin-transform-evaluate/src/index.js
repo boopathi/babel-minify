@@ -20,7 +20,9 @@ export default function Evaluate({types: t} /*:PluginOptions*/) {
           if (isDeopt(path.get('right'))) return;
 
           const evaluated = path.evaluate();
-          if (evaluated.confident) path.replaceWith(t.valueToNode(evaluated.value));
+          if (evaluated.confident && evaluated.value.toString().length <= path.getSource().length) {
+            path.replaceWith(t.valueToNode(evaluated.value));
+          }
         }
       },
 

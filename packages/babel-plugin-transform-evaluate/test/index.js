@@ -55,4 +55,12 @@ describe('babel-plugin-transform-evaluate', function () {
       trim('var x = 5; var [y] = [x]; { x = 6 }')
     );
   });
+
+  it('should not replace when the evaluated result is longer than source', function () {
+    expect(
+      test('1/3')
+    ).toEqual(
+      trim('1/3')
+    );
+  });
 });
