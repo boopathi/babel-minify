@@ -69,6 +69,8 @@ declare module Babel {
     // others
     forEach(a: any): void,
 
+    getSource(): string,
+
     // FIXME
     // Temporary Fix
     [key: string]: Function,
