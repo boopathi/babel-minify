@@ -1,5 +1,15 @@
 # babel-minify
 
+# DISCONTINUE NOTICE
+
+This project is discontinued here and I'm contributing here -
+
+https://github.com/babel/babili
+
+Thanks for your interest !!!
+
+---------------
+
 Some tools, babel plugins and presets to minify ES6+ code or whatever code babel understands.
 
 [![Build Status](https://travis-ci.org/boopathi/babel-minify.svg?branch=master)](https://travis-ci.org/boopathi/babel-minify)
