@@ -1,5 +1,7 @@
 # babel-minify
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/boopathi/babel-minify.svg)](https://greenkeeper.io/)
+
 # DISCONTINUE NOTICE
 
 This project is discontinued here and I'm contributing here -
